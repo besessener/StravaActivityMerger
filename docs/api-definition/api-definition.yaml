@@ -1,0 +1,556 @@
+{
+  "components": {
+    "schemas": {
+      "ApplicationContext": {
+        "type": "object",
+        "properties": {
+          "parent": {
+            "$ref": "#/components/schemas/ApplicationContext"
+          },
+          "environment": {
+            "$ref": "#/components/schemas/Environment"
+          },
+          "classLoader": {
+            "type": "object",
+            "properties": {
+              "parent": {
+                "type": "object",
+                "properties": {
+                  "defaultAssertionStatus": {
+                    "writeOnly": true,
+                    "type": "boolean"
+                  }
+                }
+              },
+              "defaultAssertionStatus": {
+                "writeOnly": true,
+                "type": "boolean"
+              }
+            }
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "startupDate": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "beanDefinitionCount": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "autowireCapableBeanFactory": {
+            "$ref": "#/components/schemas/AutowireCapableBeanFactory"
+          },
+          "beanDefinitionNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "parentBeanFactory": {
+            "$ref": "#/components/schemas/BeanFactory"
+          },
+          "id": {
+            "type": "string"
+          },
+          "applicationName": {
+            "type": "string"
+          }
+        }
+      },
+      "BeanFactory": {
+        "type": "object"
+      },
+      "RedirectView": {
+        "type": "object",
+        "properties": {
+          "http10Compatible": {
+            "writeOnly": true,
+            "type": "boolean"
+          },
+          "attributesCSV": {
+            "writeOnly": true,
+            "type": "string"
+          },
+          "servletContext": {
+            "writeOnly": true,
+            "type": "object",
+            "properties": {
+              "initParameterNames": {
+                "type": "object"
+              },
+              "virtualServerName": {
+                "type": "string"
+              },
+              "classLoader": {
+                "type": "object",
+                "properties": {
+                  "parent": {
+                    "type": "object",
+                    "properties": {
+                      "defaultAssertionStatus": {
+                        "writeOnly": true,
+                        "type": "boolean"
+                      }
+                    }
+                  },
+                  "defaultAssertionStatus": {
+                    "writeOnly": true,
+                    "type": "boolean"
+                  }
+                }
+              },
+              "sessionTrackingModes": {
+                "writeOnly": true,
+                "uniqueItems": true,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "COOKIE",
+                    "URL",
+                    "SSL"
+                  ]
+                }
+              },
+              "servletNames": {
+                "deprecated": true,
+                "type": "object"
+              },
+              "contextPath": {
+                "type": "string"
+              },
+              "defaultSessionTrackingModes": {
+                "uniqueItems": true,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "COOKIE",
+                    "URL",
+                    "SSL"
+                  ]
+                }
+              },
+              "majorVersion": {
+                "format": "int32",
+                "type": "integer"
+              },
+              "sessionCookieConfig": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  },
+                  "maxAge": {
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "domain": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "comment": {
+                    "type": "string"
+                  },
+                  "httpOnly": {
+                    "type": "boolean"
+                  },
+                  "secure": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "effectiveMinorVersion": {
+                "format": "int32",
+                "type": "integer"
+              },
+              "effectiveSessionTrackingModes": {
+                "uniqueItems": true,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "COOKIE",
+                    "URL",
+                    "SSL"
+                  ]
+                }
+              },
+              "attributeNames": {
+                "type": "object"
+              },
+              "serverInfo": {
+                "type": "string"
+              },
+              "jspConfigDescriptor": {
+                "type": "object",
+                "properties": {
+                  "jspPropertyGroups": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "isXml": {
+                          "type": "string"
+                        },
+                        "elIgnored": {
+                          "type": "string"
+                        },
+                        "errorOnUndeclaredNamespace": {
+                          "type": "string"
+                        },
+                        "trimDirectiveWhitespaces": {
+                          "type": "string"
+                        },
+                        "scriptingInvalid": {
+                          "type": "string"
+                        },
+                        "urlPatterns": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "pageEncoding": {
+                          "type": "string"
+                        },
+                        "includePreludes": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "buffer": {
+                          "type": "string"
+                        },
+                        "deferredSyntaxAllowedAsLiteral": {
+                          "type": "string"
+                        },
+                        "includeCodas": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "defaultContentType": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "taglibs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "taglibLocation": {
+                          "type": "string"
+                        },
+                        "taglibURI": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "servlets": {
+                "deprecated": true,
+                "type": "object"
+              },
+              "responseCharacterEncoding": {
+                "type": "string"
+              },
+              "requestCharacterEncoding": {
+                "type": "string"
+              },
+              "sessionTimeout": {
+                "format": "int32",
+                "type": "integer"
+              },
+              "minorVersion": {
+                "format": "int32",
+                "type": "integer"
+              },
+              "servletContextName": {
+                "type": "string"
+              },
+              "effectiveMajorVersion": {
+                "format": "int32",
+                "type": "integer"
+              }
+            }
+          },
+          "hosts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "requestContextAttribute": {
+            "type": "string"
+          },
+          "encodingScheme": {
+            "writeOnly": true,
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "redirectView": {
+            "type": "boolean"
+          },
+          "exposePathVariables": {
+            "type": "boolean"
+          },
+          "expandUriTemplateVariables": {
+            "writeOnly": true,
+            "type": "boolean"
+          },
+          "contextRelative": {
+            "writeOnly": true,
+            "type": "boolean"
+          },
+          "exposedContextBeanNames": {
+            "writeOnly": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "propagateQueryProperties": {
+            "type": "boolean"
+          },
+          "applicationContext": {
+            "$ref": "#/components/schemas/ApplicationContext"
+          },
+          "exposeContextBeansAsAttributes": {
+            "writeOnly": true,
+            "type": "boolean"
+          },
+          "exposeModelAttributes": {
+            "writeOnly": true,
+            "type": "boolean"
+          },
+          "beanName": {
+            "type": "string"
+          },
+          "propagateQueryParams": {
+            "writeOnly": true,
+            "type": "boolean"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "statusCode": {
+            "writeOnly": true,
+            "type": "string",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          }
+        }
+      },
+      "Environment": {
+        "type": "object",
+        "properties": {
+          "defaultProfiles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "activeProfiles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AutowireCapableBeanFactory": {
+        "type": "object"
+      }
+    }
+  },
+  "servers": [
+    {
+      "description": "Generated server url",
+      "url": "http://localhost"
+    }
+  ],
+  "openapi": "3.0.1",
+  "paths": {
+    "/exchangeToken": {
+      "get": {
+        "operationId": "getExchangeToken",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedirectView"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "state",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "code",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "scope",
+            "required": true
+          }
+        ],
+        "tags": [
+          "authentication-api"
+        ]
+      }
+    },
+    "/authentification": {
+      "get": {
+        "operationId": "getOAuthRedirect",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedirectView"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "authentication-api"
+        ]
+      }
+    },
+    "/activitymerger": {
+      "get": {
+        "operationId": "getActivities",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "token",
+            "required": true
+          }
+        ],
+        "tags": [
+          "activity-api"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  }
+}

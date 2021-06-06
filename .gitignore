@@ -6,6 +6,8 @@ build/
 !**/src/test/**/build/
 /src-api
 **/.secrets
+**/.openapi-generator-ignore
+/docs/api/.openapi-generator
 
 ### STS ###
 .apt_generated

@@ -33,6 +33,7 @@ dependencies {
     implementation("org.openapitools:openapi-generator-gradle-plugin:5.1.1") {
         exclude module: "slf4j-simple"
     }
+    implementation('org.codehaus.groovy.modules.http-builder:http-builder:0.7')
     implementation('org.codehaus.groovy:groovy-all:2.4.15')
     implementation('org.springdoc:springdoc-openapi-groovy:1.5.2')
     implementation('org.springdoc:springdoc-openapi-ui:1.5.2')
@@ -46,15 +47,16 @@ test {
 }
 
 openApi {
-    outputDir.set(file("$buildDir/generated/docs"))
+    outputDir.set(file("${project.getRootDir()}/docs/api-definition"))
     outputFileName.set("api-definition.yaml")
     waitTimeInSeconds.set(15)
+    apiDocsUrl.set("http://localhost/v3/api-docs")
 }
 
 openApiGenerate {
     generatorName = "asciidoc"
-    inputSpec = "$buildDir/generated/docs/api-definition.yaml".toString()
-    outputDir = "$buildDir/generated/docs".toString()
+    inputSpec = "${project.getRootDir()}/docs/api-definition/api-definition.yaml".toString()
+    outputDir = "${project.getRootDir()}/docs/api".toString()
     configOptions = [
             dateLibrary    : "java8",
             appDescription : "A Groovy App to merge Strava activities.",
@@ -70,59 +72,6 @@ task downloadStravaApi(type: Download) {
     acceptAnyCertificate true
 }
 
-task openApiGroovy(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask, dependsOn: [':downloadStravaApi']) {
-    generatorName = "groovy"
-    inputSpec = "$buildDir/generated/strava-api-definition/api.json"
-    outputDir = "${project.getRootDir().absolutePath}/src-api"
-    validateSpec = false
-
-    // workaround, generated build.gradle is not working
-    doLast {
-        new File("${project.getRootDir().absolutePath}/src-api", "build.gradle").text = '''
-apply plugin: 'groovy'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-
-group = 'org.openapitools'
-version = '3.0.0'
-archivesBaseName = 'openapi-gen-groovy'
-
-buildscript {
-    repositories {
-        maven { url "https://repo1.maven.org/maven2" }
-        maven { url = 'https://repo.jfrog.org/artifactory/gradle-plugins' }
-    }
-    dependencies {
-        classpath(group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '2.0.16')
-    }
-}
-
-repositories {
-    maven { url "https://repo1.maven.org/maven2" }
-    mavenLocal()
-}
-
-ext {
-    swagger_annotations_version = "1.5.22"
-    jackson_version = "2.9.10"
-    jackson_databind_version = "2.9.10.8"
-}
-
-dependencies {
-    implementation 'org.codehaus.groovy:groovy-all:2.5.14'
-    implementation "io.swagger:swagger-annotations:$swagger_annotations_version"
-    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
-    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_databind_version"
-    implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jackson_version"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda:$jackson_version"
-    implementation 'io.github.http-builder-ng:http-builder-ng-core:1.0.3'
-    testImplementation "junit:junit:4.13"
-}
-'''
-    }
-}
-
-bootRun.dependsOn(['openApiGenerate', 'openApiGroovy'])
-build.dependsOn(['openApiGenerate', 'openApiGroovy'])
+bootRun.dependsOn(['openApiGenerate'])
+build.dependsOn(['openApiGenerate'])
 tasks.openApiGenerate.dependsOn('generateOpenApiDocs')

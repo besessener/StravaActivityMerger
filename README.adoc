@@ -1,0 +1,22 @@
+= Setup
+
+== Get Strava API specification
+
+To get the spec, simply run the Gradle task `downloadStravaApi`. You can do this either directly in IntelliJ or with `./gradlew downloadStravaApi` on command line.
+
+== Generate OpenAPI client code
+
+Unfortunately the Groovy support is really poor for Swagger/OpenAPI, so it's required to generate Java code. But since it is generated  code and shall not be touched, it doesn't really  matter.
+To generate use the IntelliJ plugin. Simply open `build/generated/strava-api-definition/api.json` and in the Editor click on the edit button:
+
+image::docs/openapi-generate-edit.png[]
+
+And there set the settings as below:
+
+image::docs/openapi-generate-edit-dialog.png[]
+
+It is important to choose the correct path (according to gradle settings it is `src-api`) and to set the correct generator version --> 2. The generator will be downloaded automatically.
+
+== API
+
+include::docs/api/index.adoc[]
