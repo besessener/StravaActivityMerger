@@ -72,6 +72,17 @@ task downloadStravaApi(type: Download) {
     acceptAnyCertificate true
 }
 
-bootRun.dependsOn(['openApiGenerate'])
-build.dependsOn(['openApiGenerate'])
+task downloadSwaggerJar(type: Download) {
+    src 'https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.12/swagger-codegen-cli-2.4.12.jar'
+    dest "$buildDir/generated/strava-api-definition/swagger.jar"
+    overwrite true
+    acceptAnyCertificate true
+}
+
+task runSwaggerCodeGen(type: Exec, dependsOn: ['downloadSwaggerJar', 'downloadStravaApi']) {
+    commandLine "java", "-jar", "$buildDir\\generated\\strava-api-definition\\swagger.jar", "generate", "-l", "java", "-i", "$buildDir\\generated\\strava-api-definition\\api.json", "-o", "${project.getRootDir()}\\src-api"
+}
+
+bootRun.dependsOn(['build'])
+build.dependsOn(['openApiGenerate', 'runSwaggerCodeGen'])
 tasks.openApiGenerate.dependsOn('generateOpenApiDocs')

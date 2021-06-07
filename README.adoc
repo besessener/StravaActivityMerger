@@ -15,7 +15,9 @@ And there set the settings as below:
 
 image::docs/openapi-generate-edit-dialog.png[]
 
-It is important to choose the correct path (according to gradle settings it is `src-api`) and to set the correct generator version --> 2. The generator will be downloaded automatically.
+It is important to choose the correct path (according to gradle settings it is `src-api`) and to set the correct generator version --> The generator will be downloaded automatically.
+
+OR! just run Gradle task `build` to get everything properly generated.
 
 == API
 
