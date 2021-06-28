@@ -5,14 +5,11 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {DemoMaterialModule} from './app/material-module';
+import {DemoMaterialModule} from './material-module';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 
-import {TableExpandableRowsExample} from './app/table-expandable-rows-example';
+import {ActivityTableComponent} from './activity-table-component/activity-table-component';
 
-// Default MatFormField appearance to 'fill' as that is the new recommended approach and the
-// `legacy` and `standard` appearances are scheduled for deprecation in version 10.
-// This makes the examples that use MatFormField render the same in StackBlitz as on the docs site.
 @NgModule({
   imports: [
     BrowserModule,
@@ -23,9 +20,9 @@ import {TableExpandableRowsExample} from './app/table-expandable-rows-example';
     MatNativeDateModule,
     ReactiveFormsModule,
   ],
-  entryComponents: [TableExpandableRowsExample],
-  declarations: [TableExpandableRowsExample],
-  bootstrap: [TableExpandableRowsExample],
+  entryComponents: [ActivityTableComponent],
+  declarations: [ActivityTableComponent],
+  bootstrap: [ActivityTableComponent],
   providers: [
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
   ]
@@ -34,8 +31,3 @@ export class AppModule {}
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
-
-
-/**  Copyright 2021 Google LLC. All Rights Reserved.
-    Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at http://angular.io/license */

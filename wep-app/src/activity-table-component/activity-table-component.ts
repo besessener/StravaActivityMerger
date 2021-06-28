@@ -5,9 +5,9 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
  * @title Table with expandable rows
  */
 @Component({
-  selector: 'table-expandable-rows-example',
-  styleUrls: ['table-expandable-rows-example.css'],
-  templateUrl: 'table-expandable-rows-example.html',
+  selector: 'activity-table-component',
+  styleUrls: ['activity-table-component.css'],
+  templateUrl: 'activity-table-component.html',
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -16,7 +16,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
     ]),
   ],
 })
-export class TableExpandableRowsExample {
+export class ActivityTableComponent {
   dataSource = ELEMENT_DATA;
   columnsToDisplay = ['name', 'weight', 'symbol', 'position'];
   expandedElement: PeriodicElement | null;
@@ -111,8 +111,3 @@ const ELEMENT_DATA: PeriodicElement[] = [
         two-thirds the density of air.`
   },
 ];
-
-
-/**  Copyright 2021 Google LLC. All Rights Reserved.
-    Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at http://angular.io/license */
