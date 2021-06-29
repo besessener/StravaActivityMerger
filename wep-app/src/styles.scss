@@ -3,11 +3,38 @@
 body {
   font-family: Roboto, Arial, sans-serif;
   margin: 0;
-  padding: 30px;
 }
 
-.version-info {
-  font-size: 8pt;
-  float: right;
-  margin: 8px;
+.site-footer {
+  position: absolute;
+  bottom: 0;
+  background-color: #26272b;
+  font-size: 15px;
+  line-height: 24px;
+  color: #737373;
+  width: 100vw;
+  height: 70px;
+}
+
+.site-footer a {
+  color: #737373;
+}
+
+.site-footer a:hover {
+  color: #3366cc;
+  text-decoration: none;
+}
+
+.footer-links {
+  padding-left: 0;
+  list-style: none
+}
+
+.footer-links a {
+  color: #737373
+}
+
+.footer-links a:active, .footer-links a:focus, .footer-links a:hover {
+  color: #3366cc;
+  text-decoration: none;
 }

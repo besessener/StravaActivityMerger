@@ -20,6 +20,7 @@ export class ActivityTableComponent {
   dataSource = ELEMENT_DATA;
   columnsToDisplay = ['name', 'weight', 'symbol', 'position'];
   expandedElement: PeriodicElement | null;
+  token: string = '';
 }
 
 export interface PeriodicElement {
