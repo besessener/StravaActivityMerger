@@ -1,2 +1,2 @@
-<activity-table-component *ngIf="this.code!=''">Loading</activity-table-component>
-<login-component *ngIf="this.code==''">Loading</login-component>
+<activity-table-component *ngIf="this.tokenAvailable" [activities]="this.activities">Loading</activity-table-component>
+<login-component *ngIf="!this.tokenAvailable">Loading</login-component>

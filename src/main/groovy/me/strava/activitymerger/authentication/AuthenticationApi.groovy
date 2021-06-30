@@ -15,6 +15,7 @@ class AuthenticationApi {
 
     @GetMapping("exchangeToken")
     def getExchangeToken(@RequestParam(required = true) String code) {
-        ["token": authentificationHandler.getAuthToken(code)]
+        //["token": authentificationHandler.getAuthToken(code)]
+        ["token": "1234567890"] //TODO
     }
 }

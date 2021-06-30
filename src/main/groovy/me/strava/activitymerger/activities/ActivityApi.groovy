@@ -16,9 +16,10 @@ class ActivityApi {
         apiClient
     }
 
-    @GetMapping("activitymerger")
+    @GetMapping("activityList")
     Object getActivities(
             @RequestParam(required = true) String token) {
-        new ActivitiesApi(getApiClient(token)).getLoggedInAthleteActivities(System.currentTimeSeconds().toInteger(), 0, 1, 30)
+        //new ActivitiesApi(getApiClient(token)).getLoggedInAthleteActivities(System.currentTimeSeconds().toInteger(), 0, 1, 30)
+        ["activities": [["id": 1, "type": "ride"], ["id": 2, "type": "walk"]]] //TODO
     }
 }

@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Params} from "@angular/router";
+import {ActivitiesRetrieverService} from "./activities-retriever-service/activities-retriever.service";
 
 @Component({
   selector: 'app-root',
@@ -8,12 +9,16 @@ import {ActivatedRoute, Params} from "@angular/router";
 })
 export class AppComponent {
   title = 'Activity Merger';
-  code: string = '';
+  tokenAvailable: boolean = false;
+  activities: any;
 
-  constructor(private _route: ActivatedRoute) {
+  constructor(private _route: ActivatedRoute, public activitiesRetrieverService: ActivitiesRetrieverService) {
     _route.queryParams.subscribe( (params: Params) => {
       if (params.code) {
-        this.code = params.code;
+        activitiesRetrieverService.getActivities(params.code).subscribe( activities => {
+          this.activities = activities;
+          this.tokenAvailable = true;
+        })
       }
     })
   }
