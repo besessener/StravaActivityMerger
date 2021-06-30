@@ -15,10 +15,6 @@ class AuthentificationHandler {
     @Autowired
     Secrets secrets
 
-    String getStravaAuthentificationUrl() {
-        "${AppConstants.STRAVA_BASE_URL}oauth/authorize?client_id=${secrets.getSecret('client_id')}&response_type=code&redirect_uri=${AppConstants.STRAVA_REDIRECT_URL}&approval_prompt=force&scope=activity:read_all"
-    }
-
     String getAuthToken(String exchangeToken) {
         def accessToken = ''
         def http = new HTTPBuilder(AppConstants.STRAVA_BASE_URL)

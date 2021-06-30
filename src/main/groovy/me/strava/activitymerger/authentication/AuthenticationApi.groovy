@@ -13,16 +13,8 @@ class AuthenticationApi {
     @Autowired
     AuthentificationHandler authentificationHandler
 
-    @GetMapping("authentification")
-    RedirectView getOAuthRedirect() {
-        new RedirectView(authentificationHandler.getStravaAuthentificationUrl())
-    }
-
     @GetMapping("exchangeToken")
-    RedirectView getExchangeToken(
-            @RequestParam(required = false) String state,
-            @RequestParam(required = true) String code,
-            @RequestParam(required = true) String scope) {
-        new RedirectView("activitymerger?token=${authentificationHandler.getAuthToken(code)}")
+    def getExchangeToken(@RequestParam(required = true) String code) {
+        ["token": authentificationHandler.getAuthToken(code)]
     }
 }
