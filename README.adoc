@@ -19,7 +19,11 @@ It is important to choose the correct path (according to gradle settings it is `
 
 OR! just run Gradle task `build` to get everything properly generated.
 
-== run it
+== Install NodeJS
+
+In order to run the Angular frontend, you need to install NodeJS from https://nodejs.org/en/download/
+
+= run it
 
 For local purpose no special deployment is required. Just run:
 
@@ -28,6 +32,6 @@ For local purpose no special deployment is required. Just run:
 
 Done.
 
-== API
+= Strava API
 
 include::docs/api/index.adoc[]
