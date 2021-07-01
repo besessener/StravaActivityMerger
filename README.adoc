@@ -19,6 +19,15 @@ It is important to choose the correct path (according to gradle settings it is `
 
 OR! just run Gradle task `build` to get everything properly generated.
 
+== run it
+
+For local purpose no special deployment is required. Just run:
+
+* `./gradlew bootRun` to start the backend services
+* `cd web-app` and `ng serve --open` to open the web UI in your browser
+
+Done.
+
 == API
 
 include::docs/api/index.adoc[]
