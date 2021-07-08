@@ -25,7 +25,18 @@ In order to run the Angular frontend, you need to install NodeJS from https://no
 
 = run it
 
-For local purpose no special deployment is required. Just run:
+For local purpose no special deployment is required.
+
+But you need a secret file (`src/main/resources/.secrets`) with content which is not allowed to be shared:
+
+```JSON
+{
+    "client_id": "<your id>",
+    "client_secret": "<your client secret>"
+}
+```
+
+Just run:
 
 * `./gradlew bootRun` to start the backend services
 * `cd web-app` and `ng serve --open` to open the web UI in your browser
