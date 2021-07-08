@@ -35,3 +35,12 @@ Done.
 = Strava API
 
 include::docs/api/index.adoc[]
+
+= How it looks
+
+image::docs/connect-page.jpg[]
+image::docs/oauth2strava.jpg[]
+
+and the following page is currently only loading recent activities into a table, but does not have any details nor merge capabilities
+
+image::docs/activities-table.jpg[]
