@@ -1,13 +1,25 @@
 package me.strava.activitymerger
 
+import me.strava.activitymerger.authentication.AuthentificationHandler
+import me.strava.activitymerger.helper.Secrets
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import spock.lang.Specification
 
-@SpringBootTest
-class ActivitymergerApplicationTests {
+@SpringBootTest(classes = WebService.class)
+class ActivitymergerApplicationTests extends Specification {
 
-	@Test
-	void contextLoads() {
+	@Autowired(required = false)
+	AuthentificationHandler authentificationHandler
+
+	@Autowired(required = false)
+	Secrets secrets
+
+	def "load context of app"() {
+		expect:
+			authentificationHandler
+			secrets
 	}
 
 }
