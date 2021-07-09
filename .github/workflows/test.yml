@@ -29,5 +29,5 @@ jobs:
         run: ./gradlew.bat runSwaggerCodeGen
 
       # Run tests
-      - name: gradle test
-        run: ./gradlew.bat test
+      - name: gradle run unit tests
+        run: ./gradlew.bat testUnit
