@@ -32,7 +32,8 @@ But you need a secret file (`src/main/resources/.secrets`) with content which is
 ```JSON
 {
     "client_id": "<your id>",
-    "client_secret": "<your client secret>"
+    "client_secret": "<your client secret>",
+    "google_api_key": "<your api key>"
 }
 ```
 

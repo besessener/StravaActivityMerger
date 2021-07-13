@@ -29,6 +29,8 @@ export class ActivityTableComponent {
 
       item['distance'] = this.meterToKilometer(item['distance'])
       item['totalElevationGain'] = this.meterToKilometer(item['totalElevationGain'])
+      item['elevHigh'] = this.meterToKilometer(item['elevHigh'])
+      item['elevLow'] = this.meterToKilometer(item['elevLow'])
 
       item['movingTime'] = this.secondsToHms(item['movingTime']);
       item['elapsedTime'] = this.secondsToHms(item['elapsedTime']);

@@ -14,7 +14,7 @@
              [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
           <img src="https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&key={{key}}&path=enc:{{element.map.summaryPolyline}}"/>
           <div class="element-description">
-            <span class="element-description-attribution">name: {{element.name}} <br/> moving time: {{element.movingTime}} <br/> highest elevation: {{element.elevHigh}} <br/> lowest elevation: {{element.elevLow}} <br/> total elevation gain {{element.totalElevationGain}}</span>
+            <span class="element-description-attribution">name: {{element.name}} <br/> distance: {{element.distance}} <br/> total elevation gain {{element.totalElevationGain}} <br/> moving time: {{element.movingTime}} <br/> highest elevation: {{element.elevHigh}} <br/> lowest elevation: {{element.elevLow}}</span>
             <br/><br/>
             <a href="https://www.strava.com/activities/{{element.id}}" mat-stroked-button><mat-icon>open_in_new</mat-icon> View on Strava</a>
           </div>
