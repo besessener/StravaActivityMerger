@@ -15,7 +15,6 @@ export class AppComponent {
 
   constructor(private _route: ActivatedRoute, public activitiesRetrieverService: ActivitiesRetrieverService) {
     let loadedToken = localStorage.getItem('token')
-    console.info(loadedToken)
     this.tokenAvailable = loadedToken != null
     if (loadedToken) {
       activitiesRetrieverService.activities.subscribe(activities => {
@@ -24,16 +23,20 @@ export class AppComponent {
       activitiesRetrieverService.getActivitiesWithToken(loadedToken)
     }
 
-    _route.queryParams.subscribe( (params: Params) => {
+    _route.queryParams.subscribe( this.onQueryParamChanged())
+  }
+
+  private onQueryParamChanged() {
+    return (params: Params) => {
       if (params.code) {
         this.codeAvailable = true;
-        activitiesRetrieverService.getActivitiesWithCode(params.code).subscribe(activities => {
+        this.activitiesRetrieverService.getActivitiesWithCode(params.code).subscribe(activities => {
           this.setActivityData(activities);
         })
       } else {
         this.codeAvailable = false;
       }
-    })
+    };
   }
 
   private setActivityData<T>(activities: T) {

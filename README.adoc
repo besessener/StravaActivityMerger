@@ -22,6 +22,7 @@ OR! just run Gradle task `build` to get everything properly generated.
 == Install NodeJS
 
 In order to run the Angular frontend, you need to install NodeJS from https://nodejs.org/en/download/
+and run `npm install` in the repository.
 
 = run it
 

@@ -29,7 +29,6 @@ export class ActivitiesRetrieverService {
   getActivitiesWithToken(token: string) {
     let url = window.location.protocol + '//' + window.location.hostname + ':6001/activityList?token=' + token;
     this._http.get(url).subscribe( (response: any) => {
-      console.info(response)
       this.activities.next(response);
     })
   }
