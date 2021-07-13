@@ -56,4 +56,4 @@ image::docs/oauth2strava.jpg[]
 
 and the following page is currently only loading recent activities into a table, showing some details and a map with polylines. You can also select activities, which will change the active state of the `Merge`-button. BUT it does not yet offer the possibility to really merge activities.
 
-image::docs/list-activities-with-map.png[]
+image::docs/list-activities-with-map-selection.png[]
