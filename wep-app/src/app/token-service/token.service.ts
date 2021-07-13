@@ -14,4 +14,9 @@ export class TokenService {
     let url = window.location.protocol + '//' + window.location.hostname + ':6001/exchangeToken?code=' + code;
     return this._http.get(url)
   }
+
+  getApiKey() {
+    let url = window.location.protocol + '//' + window.location.hostname + ':6001/googleApiToken';
+    return this._http.get(url)
+  }
 }

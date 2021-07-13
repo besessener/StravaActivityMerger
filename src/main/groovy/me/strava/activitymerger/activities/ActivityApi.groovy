@@ -2,10 +2,12 @@ package me.strava.activitymerger.activities
 
 
 import io.swagger.client.ApiClient
+import io.swagger.client.ApiException
 import io.swagger.client.api.ActivitiesApi
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.client.HttpClientErrorException
 
 @RestController()
 class ActivityApi {
@@ -19,7 +21,19 @@ class ActivityApi {
     @GetMapping("activityList")
     Object getActivities(
             @RequestParam(required = true) String token) {
-        new ActivitiesApi(getApiClient(token)).getLoggedInAthleteActivities(System.currentTimeSeconds().toInteger(), 0, 1, 30)
-        //["activities": [["id": 1, "type": "ride"], ["id": 2, "type": "walk"]]] //TODO
+        def response
+        for (int i = 0; i < 10; i++) {
+            try {
+                return new ActivitiesApi(getApiClient(token)).getLoggedInAthleteActivities(System.currentTimeSeconds().toInteger(), 0, 1, 30)
+            } catch (ApiException e) {
+                println(e.message)
+                return [message: e.message]
+            } catch (exception) {
+                exception.printStackTrace()
+                sleep(1 * 1000)
+            }
+        }
+
+        return response
     }
 }

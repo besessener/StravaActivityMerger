@@ -1,2 +1,3 @@
-<activity-table-component *ngIf="this.tokenAvailable" [activities]="this.activities">Loading</activity-table-component>
-<login-component *ngIf="!this.tokenAvailable">Loading</login-component>
+<activity-table-component *ngIf="this.tokenAvailable && this.activities.length" [activities]="this.activities">Loading</activity-table-component>
+<login-component *ngIf="!this.tokenAvailable && !this.codeAvailable">Loading</login-component>
+<load-component *ngIf="!this.activities.length && (this.tokenAvailable || this.codeAvailable)">Loading</load-component>

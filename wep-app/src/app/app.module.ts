@@ -12,6 +12,7 @@ import {MaterialModule} from "./material-module";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 import {APP_BASE_HREF} from "@angular/common";
+import {LoadComponent} from "./load-component/load.component";
 
 @NgModule({
   imports: [
@@ -24,8 +25,8 @@ import {APP_BASE_HREF} from "@angular/common";
     MatNativeDateModule,
     ReactiveFormsModule,
   ],
-  entryComponents: [ActivityTableComponent, LoginComponent, AppComponent],
-  declarations: [ActivityTableComponent, LoginComponent, AppComponent],
+  entryComponents: [ActivityTableComponent, LoginComponent, AppComponent, LoadComponent],
+  declarations: [ActivityTableComponent, LoginComponent, AppComponent, LoadComponent],
   bootstrap: [AppComponent],
   providers: [
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },

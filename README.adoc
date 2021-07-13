@@ -52,6 +52,6 @@ include::docs/api/index.adoc[]
 image::docs/connect-page.jpg[]
 image::docs/oauth2strava.jpg[]
 
-and the following page is currently only loading recent activities into a table, but does not have any details nor merge capabilities
+and the following page is currently only loading recent activities into a table, showing some details and a map with polylines, BUT does not yet offer the possibility to merge activities.
 
-image::docs/activities-table.jpg[]
+image::docs/list-activities-with-map.png[]
