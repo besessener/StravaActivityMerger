@@ -28,6 +28,20 @@ jobs:
       - name: create api code
         run: ./gradlew.bat runSwaggerCodeGen
 
-      # Run tests
+      # Run groovy unit tests
       - name: gradle run unit tests
         run: ./gradlew.bat testUnit
+
+      # install angular dependencies
+      - name: install angular dependencies with npm
+        run: |
+          npm install
+          npm install @angular/cdk
+          npm install -g karma-cli
+
+      # build and test angular app
+      - name: build and test angular app
+        run: |
+          ng build
+          ng test --watch=false --browsers=ChromeHeadless
+
