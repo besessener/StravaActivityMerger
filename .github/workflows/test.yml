@@ -47,6 +47,6 @@ jobs:
       - name: build and test angular app
         working-directory: ./web-app
         run: |
-          ng build
-          ng test --watch=false --browsers=ChromeHeadless
+          npm run build
+          npm test
 
