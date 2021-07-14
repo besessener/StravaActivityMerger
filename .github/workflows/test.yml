@@ -35,18 +35,12 @@ jobs:
       - name: gradle run unit tests
         run: ./gradlew.bat testUnit
 
-      # install angular dependencies
-      - name: install angular dependencies with npm
+      - name: install dependencies and build and test angular app
         working-directory: ./web-app
         run: |
-          npm install
+          npm ci
           npm install @angular/cdk
           npm install -g karma-cli
-
-      # build and test angular app
-      - name: build and test angular app
-        working-directory: ./web-app
-        run: |
           npm run build
           npm test
 
