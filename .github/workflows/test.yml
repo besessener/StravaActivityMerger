@@ -24,6 +24,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
       - name: create api code
         run: ./gradlew.bat runSwaggerCodeGen
@@ -34,6 +37,7 @@ jobs:
 
       # install angular dependencies
       - name: install angular dependencies with npm
+        working-directory: ./web-app
         run: |
           npm install
           npm install @angular/cdk
@@ -41,6 +45,7 @@ jobs:
 
       # build and test angular app
       - name: build and test angular app
+        working-directory: ./web-app
         run: |
           ng build
           ng test --watch=false --browsers=ChromeHeadless
