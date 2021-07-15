@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {TokenService} from "../token/token.service";
+import {BackendService} from "../backend/backend.service";
 import {Subject} from "rxjs";
 
 @Injectable({
@@ -9,27 +9,19 @@ import {Subject} from "rxjs";
 export class ActivitiesRetrieverService {
 
   public activities = new Subject();
+  public token = new Subject<string>();
 
-  constructor(private _http: HttpClient, private tokenService: TokenService) {
+  constructor(private _http: HttpClient, private backendService: BackendService) {
   }
 
-  getActivitiesWithCode(code: string) {
-    let token = localStorage.getItem('token')
-    if (!token) {
-      this.tokenService.getToken(code).subscribe((data: any) => {
-        localStorage.setItem('token', data.token);
-        this.getActivitiesWithToken(data.token)
-      })
-    } else {
-      this.getActivitiesWithToken(token);
-    }
-
-    return this.activities;
+  setTokenFromCode(code: string) {
+    this.backendService.getToken(code).subscribe((data: any) => {
+      this.token.next(data.token);
+    });
   }
 
-  getActivitiesWithToken(token: string) {
-    let url = window.location.protocol + '//' + window.location.hostname + ':6001/activityList?token=' + token;
-    this._http.get(url).subscribe((response: any) => {
+  setActivitiesWithToken(token: string) {
+    this.backendService.getActivities(token).subscribe((response: any) => {
       this.activities.next(response);
     })
   }

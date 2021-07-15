@@ -7,7 +7,8 @@ import {ActivatedRoute, Params} from "@angular/router";
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  STRAVA_AUTH_URL: any;
+  STRAVA_AUTH_URL: string;
+  
   message: string = 'This page will enable you to watch your Strava activities and merge them into one new activity (retaining or deleting the old ones). This project was brought to life, because my bike computer automatically records my rides and creates activities. Unfortunately it is not able to stop during a trip. As soon as it detects a break of 5 minutes or more, it will create a new activity. And I want to see my day trips as one, regardless of breaks during the trip. Hope it helps you, too.';
   displayMessage: string = this.message;
 

@@ -1,10 +1,10 @@
 import {TestBed} from '@angular/core/testing';
 
-import {TokenService} from './token.service';
+import {BackendService} from './backend.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 
-describe('TokenService', () => {
-  let service: TokenService;
+describe('BackendService', () => {
+  let service: BackendService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -12,7 +12,7 @@ describe('TokenService', () => {
         HttpClientTestingModule
       ]
     });
-    service = TestBed.inject(TokenService);
+    service = TestBed.inject(BackendService);
   });
 
   it('should be created', () => {

@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {TokenService} from "../../services/token/token.service";
+import {BackendService} from "../../services/backend/backend.service";
 import {SelectionModel} from "@angular/cdk/collections";
 
 /**
@@ -27,6 +27,10 @@ export class ActivityTableComponent {
   selection = new SelectionModel<Activity>(true, []);
 
   @Input() set activities(value: any[]) {
+    this.setActivities(value);
+  }
+
+  private setActivities(value: any[]) {
     this.dataSource = value;
     this.dataSource.forEach(item => {
       item['date'] = item['startDateLocal']['year'] + '-' + item['startDateLocal']['month'] + '-' + item['startDateLocal']['dayOfMonth'];
@@ -75,7 +79,7 @@ export class ActivityTableComponent {
       this.dataSource.forEach(row => this.selection.select(row));
   }
 
-  constructor(private tokenService: TokenService) {
+  constructor(private tokenService: BackendService) {
     tokenService.getApiKey().subscribe((data: any) => {
       this.key = data.key;
     })
