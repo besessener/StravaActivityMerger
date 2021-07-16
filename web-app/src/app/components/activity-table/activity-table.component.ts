@@ -21,6 +21,7 @@ import {SelectionModel} from "@angular/cdk/collections";
 export class ActivityTableComponent {
   dataSource: any[] = [];
   columnsToDisplay = ['select', 'id', 'type', 'name', 'date', 'elapsedTime'];
+
   expandedElement: Activity | null = null;
   key: string = '';
 
@@ -59,10 +60,14 @@ export class ActivityTableComponent {
     let m = Math.floor(d % 3600 / 60);
     let s = Math.floor(d % 3600 % 60);
 
-    let hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-    let mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+    let hDisplay = h > 0 ? h + (h == 1 ? " hour" : " hours") : "";
+    let mDisplay = m > 0 ? m + (m == 1 ? " minute" : " minutes") : "";
     let sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-    return hDisplay + mDisplay + sDisplay;
+    let time = [];
+    if(hDisplay) time.push(hDisplay);
+    if(mDisplay) time.push(mDisplay);
+    if(sDisplay) time.push(sDisplay);
+    return time.join(', ');
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -79,8 +84,8 @@ export class ActivityTableComponent {
       this.dataSource.forEach(row => this.selection.select(row));
   }
 
-  constructor(private tokenService: BackendService) {
-    tokenService.getApiKey().subscribe((data: any) => {
+  constructor(private backendService: BackendService) {
+    backendService.getApiKey().subscribe((data: any) => {
       this.key = data.key;
     })
   }
