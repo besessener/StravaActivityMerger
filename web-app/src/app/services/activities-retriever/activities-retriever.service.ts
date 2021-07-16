@@ -1,15 +1,15 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {BackendService} from "../backend/backend.service";
-import {Subject} from "rxjs";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActivitiesRetrieverService {
 
-  public activities = new Subject();
-  public token = new Subject<string>();
+  public activities = new BehaviorSubject<any>([]);
+  public token = new BehaviorSubject<string>('');
 
   constructor(private _http: HttpClient, private backendService: BackendService) {
   }
