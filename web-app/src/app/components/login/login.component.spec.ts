@@ -4,6 +4,7 @@ import {LoginComponent} from './login.component';
 import {RouterTestingModule} from "@angular/router/testing";
 import {BehaviorSubject, of} from "rxjs";
 import {ActivatedRoute, Params} from "@angular/router";
+import {By} from "@angular/platform-browser";
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -38,10 +39,10 @@ describe('LoginComponent', () => {
     it('should contain "This page"', () => {
       expect(component.displayMessage).toContain('This page');
       expect(component.displayMessage).toEqual(component.message);
-    });
+    })
 
+    let dummyError = 'error - alarm';
     it('add ?error= query param will display an error message', fakeAsync(() => {
-      let dummyError = 'error - alarm';
       activatedRouteStub.testParams = {
         error: dummyError
       };
@@ -49,7 +50,27 @@ describe('LoginComponent', () => {
       tick(1);
 
       expect(component.displayMessage).toContain(dummyError);
-    }));
+    }))
+
+    it('should really show errors in html', fakeAsync(() => {
+      let title = fixture.debugElement.query(By.css('h3')).nativeElement;
+      expect(title.innerHTML).toBe('Activity Merger');
+      let contents = fixture.debugElement.queryAll(By.css('p'));
+      expect(contents[0].nativeElement.innerHTML).toContain('This page');
+      expect(contents[1].nativeElement.innerHTML).toContain('(Re-) Connecting');
+
+      activatedRouteStub.testParams = {
+        error: dummyError
+      };
+      fixture.detectChanges();
+      tick(1);
+
+      title = fixture.debugElement.query(By.css('h3')).nativeElement;
+      expect(title.innerHTML).toBe('Activity Merger');
+      contents = fixture.debugElement.queryAll(By.css('p'));
+      expect(contents[0].nativeElement.innerHTML).toContain(dummyError);
+      expect(contents[1].nativeElement.innerHTML).toContain('(Re-) Connecting');
+    }))
   });
 });
 
