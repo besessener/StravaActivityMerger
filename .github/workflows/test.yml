@@ -42,5 +42,5 @@ jobs:
           npm install @angular/cdk
           npm install -g karma-cli
           npm run build
-          npm run test -- --watch=false --browsers=ChromeHeadless
+          npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage
 
