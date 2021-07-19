@@ -31,7 +31,7 @@ export class ActivityTableComponent {
     this.setActivities(value);
   }
 
-  private setActivities(value: any[]) {
+  setActivities(value: any[]) {
     this.dataSource = value;
     this.dataSource.forEach(item => {
       item['date'] = item['startDateLocal']['year'] + '-' + item['startDateLocal']['month'] + '-' + item['startDateLocal']['dayOfMonth'];
@@ -81,7 +81,10 @@ export class ActivityTableComponent {
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
-      this.dataSource.forEach(row => this.selection.select(row));
+      this.dataSource.forEach(row => {
+        console.log(row.id + " added");
+        this.selection.select(row)
+      });
   }
 
   constructor(private backendService: BackendService) {

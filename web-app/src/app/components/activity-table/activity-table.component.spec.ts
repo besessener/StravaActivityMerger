@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {ActivityTableComponent} from './activity-table.component';
+import {Activity, ActivityTableComponent} from './activity-table.component';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -48,11 +48,41 @@ describe('ActivityTableComponent', () => {
   })
 
   it('should return true if number of selected == number of rows', () => {
-    console.log(component.isAllSelected());
     expect(component.isAllSelected()).toBeTrue(); // no data, nothing selected
-    // component.masterToggle();
-    // expect(component.isAllSelected).toEqual(true);
-    // component.masterToggle();
-    // expect(component.isAllSelected).toEqual(false);
+
+    let data: Activity[] = [
+      {id: 1, type: 'ride', name: 'afternoon ride', date: '1-July-2021', elapsedTime: '10 seconds'}
+    ];
+    component.dataSource = data;
+
+    expect(component.isAllSelected()).toBeFalse();
+    component.masterToggle();
+    expect(component.isAllSelected()).toBeTrue();
+    component.masterToggle();
+    expect(component.isAllSelected()).toBeFalse();
+  })
+
+  it('should set activities correctly', () => {
+    let data: any[] = [
+      {
+        id: 1,
+        type: 'ride',
+        name: 'afternoon ride',
+        date: '1-July-2021',
+        elapsedTime: '10 seconds',
+        startDateLocal: {year: '2021', month: '5', dayOfMonth: '15'},
+        distance: '500',
+        totalElevationGain: '1001',
+        elevHigh: '20',
+        elevLow: '0',
+        movingTime: '1000000'
+      }
+    ];
+
+    component.setActivities(data);
+
+    expect(component.dataSource[0].date).toEqual('2021-5-15');
+    expect(component.dataSource[0].distance).toEqual('500 m');
+    expect(component.dataSource[0].movingTime).toEqual('277 hours, 46 minutes, 40 seconds');
   })
 });
