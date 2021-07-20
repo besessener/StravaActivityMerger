@@ -5,7 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 /src-api
-**/.secrets
+**/src/main/**/.secrets
 **/.openapi-generator-ignore
 /docs/api/.openapi-generator
 
