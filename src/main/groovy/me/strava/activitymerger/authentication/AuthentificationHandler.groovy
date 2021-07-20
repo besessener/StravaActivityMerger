@@ -15,9 +15,14 @@ class AuthentificationHandler {
     @Autowired
     Secrets secrets
 
+    HTTPBuilder http
+
+    AuthentificationHandler() {
+        http = new HTTPBuilder(AppConstants.STRAVA_BASE_URL)
+    }
+
     String getAuthToken(String exchangeToken) {
         def accessToken = ''
-        def http = new HTTPBuilder(AppConstants.STRAVA_BASE_URL)
         def httpClient = new HttpClientBuilder()
         httpClient.setRedirectStrategy(LaxRedirectStrategy.newInstance())
         http.client = httpClient.build()

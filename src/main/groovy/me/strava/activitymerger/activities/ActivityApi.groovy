@@ -1,13 +1,11 @@
 package me.strava.activitymerger.activities
 
-
 import io.swagger.client.ApiClient
 import io.swagger.client.ApiException
 import io.swagger.client.api.ActivitiesApi
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.client.HttpClientErrorException
 
 @RestController()
 class ActivityApi {

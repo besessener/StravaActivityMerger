@@ -88,8 +88,13 @@ task coverageLimit() {
                 .collect {[(it.@name), it.counter.find{it.@type == 'LINE'}]}.collect {[(it[0]), Double.valueOf(it[1].@covered)/(Double.valueOf(it[1].@covered) + Double.valueOf(it[1].@missed))]}
 
         def thresh = 0.7
+        println "#" * 40
+        println "Code Coverage reults:"
+        println "-" * 40
+        limits.each {println it[0] + ": " + it[1]}
         def warns = limits.findAll {it[1] < thresh}
         if (warns) throw new Exception("Code coverage is too bad ($thresh): $warns")
+        println "#" * 40
     }
 }
 

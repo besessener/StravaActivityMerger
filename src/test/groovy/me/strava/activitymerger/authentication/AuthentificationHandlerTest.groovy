@@ -18,7 +18,7 @@ class AuthentificationHandlerTest extends Specification {
     @SpringBean
     Secrets secrets = Mock()
 
-    def "GetAuthToken"() {
+    def "GetAuthToken throw exception"() {
         given:
             secrets.getSecret(_) >> 'secret'
 
@@ -27,5 +27,18 @@ class AuthentificationHandlerTest extends Specification {
 
         then:
             thrown HttpResponseException // token is invalid
+    }
+
+    def "GetAuthToken success"() {
+        given:
+            secrets.getSecret(_) >> 'secret'
+            authentificationHandler.http = Mock(HTTPBuilder)
+            def closurePost = { println 'post' }
+
+        when:
+            authentificationHandler.getAuthToken("123authtoken")
+
+        then:
+            1 * authentificationHandler.http.post(_, _) >> closurePost()
     }
 }

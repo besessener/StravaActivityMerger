@@ -1,5 +1,6 @@
 package me.strava.activitymerger.activities
 
+import io.swagger.client.ApiException
 import io.swagger.client.api.ActivitiesApi
 import me.strava.activitymerger.WebService
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,5 +50,41 @@ class ActivityApiTest extends Specification {
 
         then:
             '' == res
+    }
+
+    def "/activityList : retry on exception"() {
+        given:
+            def counter = 0
+            GroovyStub(ActivitiesApi.class, global: true)
+            new ActivitiesApi(_) >> {
+                counter++
+                throw new Exception()
+            }
+
+        when:
+            mvc.perform(get('/activityList').param('token', '123'))
+                    .andExpect(status().isOk())
+                    .andReturn()
+
+        then:
+            10 == counter
+    }
+
+    def "/activityList : error returned on ApiException"() {
+        given:
+            GroovyStub(ActivitiesApi.class, global: true)
+            new ActivitiesApi(_) >> {
+                throw new ApiException('some new error')
+            }
+
+        when:
+            def res = mvc.perform(get('/activityList').param('token', '123'))
+                    .andExpect(status().isOk())
+                    .andReturn()
+                    .response
+                    .contentAsString
+
+        then:
+            '{"message":"some new error"}' == res
     }
 }
