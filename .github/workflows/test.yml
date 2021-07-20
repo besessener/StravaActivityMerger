@@ -31,9 +31,12 @@ jobs:
       - name: create api code
         run: ./gradlew.bat runSwaggerCodeGen
 
-      # Run groovy unit tests
+      # Run groovy unit tests and generates code coverage reports
       - name: gradle run unit tests
-        run: ./gradlew.bat testUnit
+        run: ./gradlew.bat test
+
+      - name: gradle run code cov enforcement (70%)
+        run: ./gradlew.bat coverageLimit
 
       - name: install dependencies and build and test angular app
         working-directory: ./web-app

@@ -7,6 +7,11 @@ plugins {
     id "org.openapi.generator" version "5.1.1"
     id "de.undercouch.download" version "4.1.1"
     id "idea"
+    id 'jacoco'
+}
+
+subprojects {
+    apply plugin: 'java'
 }
 
 apply plugin: "com.github.johnrengelman.processes"
@@ -24,9 +29,10 @@ configurations {
 }
 
 sourceSets {
-    unitTest {
-        groovy.srcDirs = [file('src/test/groovy')]
-    }
+    sourceSets.main.groovy.srcDirs = ['src/main/groovy']
+    sourceSets.test.groovy.srcDirs = ['src/test/groovy']
+    sourceSets.main.java.srcDirs = ['src-api/src/main/java']
+    sourceSets.test.java.srcDirs = []
 }
 
 repositories {
@@ -52,17 +58,38 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed", "standardOut", "standardError"
         outputs.upToDateWhen {false}
         showStandardStreams = true
     }
+
+    finalizedBy jacocoTestReport
+    jacoco {
+        excludes += ["**/io.swagger/**"]
+    }
 }
 
-task testUnit(type: Test) {
-    beforeTest { descriptor ->
-        logger.lifecycle("Running test: " + descriptor)
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        csv.required = false
+        html.enabled = true
+    }
+}
+
+task coverageLimit() {
+    doLast{
+        File file = new File("$buildDir/reports/jacoco/test/jacocoTestReport.xml")
+        file.write(file.text.replace('<!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.1//EN" "report.dtd">', ''))
+        def content = new XmlParser().parse(file)
+        def limits =  content.package.findAll { it.@name.startsWith("me/strava/activitymerger/") }
+                .collect {[(it.@name), it.counter.find{it.@type == 'LINE'}]}.collect {[(it[0]), Double.valueOf(it[1].@covered)/(Double.valueOf(it[1].@covered) + Double.valueOf(it[1].@missed))]}
+
+        def thresh = 0.7
+        def warns = limits.findAll {it[1] < thresh}
+        if (warns) throw new Exception("Code coverage is too bad ($thresh): $warns")
     }
 }
 
@@ -106,3 +133,5 @@ task runSwaggerCodeGen(type: Exec, dependsOn: ['downloadSwaggerJar', 'downloadSt
 bootRun.dependsOn(['build'])
 build.dependsOn(['openApiGenerate', 'runSwaggerCodeGen'])
 tasks.openApiGenerate.dependsOn('generateOpenApiDocs')
+//coverageLimit.dependsOn(['jacocoTestReport'])
+//check.dependsOn(['coverageLimit'])
