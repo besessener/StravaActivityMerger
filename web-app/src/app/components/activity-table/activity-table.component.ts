@@ -82,7 +82,6 @@ export class ActivityTableComponent {
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.forEach(row => {
-        console.log(row.id + " added");
         this.selection.select(row)
       });
   }
