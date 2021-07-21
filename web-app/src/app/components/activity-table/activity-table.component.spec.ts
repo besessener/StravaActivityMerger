@@ -4,6 +4,7 @@ import {Activity, ActivityTableComponent} from './activity-table.component';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {RouterModule} from "@angular/router";
 
 describe('ActivityTableComponent', () => {
   let component: ActivityTableComponent;
@@ -14,7 +15,8 @@ describe('ActivityTableComponent', () => {
       imports: [
         HttpClientTestingModule,
         MatTableModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        RouterModule.forRoot([])
       ],
       declarations: [ActivityTableComponent]
     })
@@ -84,5 +86,14 @@ describe('ActivityTableComponent', () => {
     expect(component.dataSource[0].date).toEqual('2021-5-15');
     expect(component.dataSource[0].distance).toEqual('500 m');
     expect(component.dataSource[0].movingTime).toEqual('277 hours, 46 minutes, 40 seconds');
+  })
+
+  it('merge button click does not fail', () => {
+    let data1: Activity = {id: 1, type: 'ride', name: 'afternoon ride', date: '1-July-2021', elapsedTime: '10 seconds'};
+    let data2: Activity = {id: 2, type: 'canoeing', name: 'canoeing', date: '2-July-2021', elapsedTime: '1 hour'};
+    component.selection.selected.push(data1);
+    component.selection.selected.push(data2);
+    component.mergeButtonClicked();
+    expect(true).toBeTrue();
   })
 });

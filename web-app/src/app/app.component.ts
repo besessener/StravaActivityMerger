@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {ActivitiesRetrieverService} from "./services/activities-retriever/activities-retriever.service";
 
 @Component({
@@ -7,7 +7,7 @@ import {ActivitiesRetrieverService} from "./services/activities-retriever/activi
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   title = 'Activity Merger';
 
   loadedToken: string = '';
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit{
   activities: any = [];
   mergeIds: any = [];
 
-  constructor(public route: ActivatedRoute, public activitiesRetrieverService: ActivitiesRetrieverService) {
+  constructor(public route: ActivatedRoute, public activitiesRetrieverService: ActivitiesRetrieverService, private _router: Router) {
   }
 
   ngOnInit(): void {
@@ -35,7 +35,9 @@ export class AppComponent implements OnInit{
       }
     })
 
-    this.route.queryParams.subscribe((params: Params) => {this.onQueryParamChanged(params)});
+    this.route.queryParams.subscribe((params: Params) => {
+      this.onQueryParamChanged(params)
+    });
 
     if (loadedToken) {
       this.activitiesRetrieverService.token.next(loadedToken);
@@ -44,25 +46,25 @@ export class AppComponent implements OnInit{
 
   private onQueryParamChanged(params: Params) {
     if (params.code) {
-        this.codeAvailable = true;
-        if (!this.loadedToken) {
-          this.activitiesRetrieverService.setTokenFromCode(params.code);
-        }
-      } else if (params.mergeIds) {
-        this.mergeIds = params.mergeIds.split(',').map(function(item: string) {
-          return parseInt(item, 10);
-        });
-        this.codeAvailable = false;
-      } else {
-        this.codeAvailable = false;
+      this.codeAvailable = true;
+      if (!this.loadedToken) {
+        this.activitiesRetrieverService.setTokenFromCode(params.code);
       }
+    } else if (params.mergeIds) {
+      this.mergeIds = params.mergeIds.split(',').map(function (item: string) {
+        return parseInt(item, 10);
+      });
+      this.codeAvailable = false;
+    } else {
+      this.codeAvailable = false;
+    }
   }
 
   private setActivityData<T>(activities: T) {
     this.activities = activities;
     if (this.activities.message) {
       localStorage.clear();
-      window.location.href = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/?error=' + encodeURIComponent(this.activities.message);
+      this._router.navigate(['/'], {queryParams: {error: encodeURIComponent(this.activities.message)}});
       this.tokenAvailable = false;
       this.codeAvailable = false;
     } else if (this.activities.length > 0) {
@@ -74,14 +76,14 @@ export class AppComponent implements OnInit{
     if (this.tokenAvailable) {
       if (this.mergeIds.length) {
         return 'merger';
-      } else {
-        if (this.activities.length) {
-          return 'activity-table';
-        } else {
-          if (this.codeAvailable) {
-            return 'loading';
-          }
-        }
+      }
+
+      if (this.activities.length) {
+        return 'activity-table';
+      }
+
+      if (this.codeAvailable) {
+        return 'loading';
       }
     } else {
       if (this.codeAvailable) {

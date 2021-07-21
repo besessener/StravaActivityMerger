@@ -4,7 +4,7 @@ import {AppComponent} from './app.component';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {ActivitiesRetrieverService} from "./services/activities-retriever/activities-retriever.service";
 import {Activity} from "./components/activity-table/activity-table.component";
-import {ActivatedRoute, Params} from "@angular/router";
+import {ActivatedRoute, Params, Router, RouterModule} from "@angular/router";
 import {BehaviorSubject, of, Subject} from "rxjs";
 import {LoginComponent} from "./components/login/login.component";
 
@@ -16,7 +16,8 @@ describe('AppComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        RouterModule.forRoot([])
       ],
       declarations: [
         AppComponent,
@@ -48,15 +49,19 @@ describe('AppComponent', () => {
     fixture.detectChanges();
 
     activitiesRetrieverService.token.next('123');
-
     tick(1);
 
     let data: Activity[] = [{id: 1, type: 'ride', name: 'afternoon ride', date: '1-July-2021', elapsedTime: '10 seconds'}];
     activitiesRetrieverService.activities.next(data);
-
     tick(1);
-
     expect(app.tokenAvailable).toBeTrue();
+    expect(app.codeAvailable).toBeFalse();
+
+    app.tokenAvailable = true;
+    app.codeAvailable = true;
+    activitiesRetrieverService.activities.next({message: 'test'});
+    tick(1);
+    expect(app.tokenAvailable).toBeFalse();
     expect(app.codeAvailable).toBeFalse();
   }))
 
@@ -91,4 +96,27 @@ describe('AppComponent', () => {
     expect(app.mergeIds.length).toEqual(3);
     expect(app.mergeIds).toEqual([12, 4888, 666]);
   }))
+
+  it('getVisibleComponent should give corerct component name', () => {
+    localStorage.clear();
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+
+    expect(app.getVisibleComponent()).toEqual('login');
+
+    app.codeAvailable = true;
+    app.tokenAvailable = false;
+    expect(app.getVisibleComponent()).toEqual('loading');
+
+    app.tokenAvailable = true;
+    app.codeAvailable = true;
+    expect(app.getVisibleComponent()).toEqual('loading');
+
+    app.mergeIds = [1, 2, 3]
+    expect(app.getVisibleComponent()).toEqual('merger');
+
+    app.mergeIds = []
+    app.activities = ['hui']
+    expect(app.getVisibleComponent()).toEqual('activity-table');
+  })
 });

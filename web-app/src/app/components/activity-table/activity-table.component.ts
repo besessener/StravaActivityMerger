@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {BackendService} from "../../services/backend/backend.service";
 import {SelectionModel} from "@angular/cdk/collections";
+import {Router} from "@angular/router";
 
 /**
  * @title Table with expandable rows
@@ -86,10 +87,18 @@ export class ActivityTableComponent {
       });
   }
 
-  constructor(private backendService: BackendService) {
+  constructor(private backendService: BackendService, private _router: Router) {
     backendService.getApiKey().subscribe((data: any) => {
       this.key = data.key;
     })
+  }
+
+  mergeButtonClicked() {
+    let ids = this.selection.selected.map(activity => {
+      return activity.id;
+    }).join(',')
+    console.log(ids)
+    this._router.navigate(['/'], { queryParams: {mergeIds: ids}});
   }
 }
 

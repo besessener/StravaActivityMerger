@@ -73,6 +73,6 @@
     <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
   </table>
   <div class="merge-button-container">
-    <button mat-flat-button color="accent" [disabled]="selection.selected.length < 2">Merge</button>
+    <button mat-flat-button color="accent" [disabled]="selection.selected.length < 2" (click)="mergeButtonClicked()">Merge</button>
   </div>
 </div>
