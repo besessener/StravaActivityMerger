@@ -1,3 +1,4 @@
-<activity-table-component *ngIf="this.tokenAvailable && this.activities.length" [activities]="this.activities">Loading</activity-table-component>
-<login-component *ngIf="!this.tokenAvailable && !this.codeAvailable">Loading</login-component>
-<load-component *ngIf="!this.activities.length && (this.tokenAvailable || this.codeAvailable)">Loading</load-component>
+<activity-table-component *ngIf="getVisibleComponent() == 'activity-table'" [activities]="this.activities">Loading</activity-table-component>
+<login-component *ngIf="getVisibleComponent() == 'login'">Loading</login-component>
+<load-component *ngIf="getVisibleComponent() == 'loading'">Loading</load-component>
+<merger-component *ngIf="getVisibleComponent() == 'merger'"></merger-component>
