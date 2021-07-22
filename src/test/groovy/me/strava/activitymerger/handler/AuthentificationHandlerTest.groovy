@@ -1,4 +1,4 @@
-package me.strava.activitymerger.authentication
+package me.strava.activitymerger.handler
 
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.HttpResponseException

@@ -1,4 +1,4 @@
-package me.strava.activitymerger.activities
+package me.strava.activitymerger.api
 
 import io.swagger.client.ApiException
 import io.swagger.client.api.ActivitiesApi

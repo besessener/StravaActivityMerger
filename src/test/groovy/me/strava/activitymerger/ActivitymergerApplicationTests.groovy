@@ -1,8 +1,8 @@
 package me.strava.activitymerger
 
-import me.strava.activitymerger.authentication.AuthentificationHandler
+
+import me.strava.activitymerger.handler.AuthentificationHandler
 import me.strava.activitymerger.helper.Secrets
-import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification

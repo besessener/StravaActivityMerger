@@ -1,7 +1,8 @@
-package me.strava.activitymerger.authentication
+package me.strava.activitymerger.api
 
 
 import me.strava.activitymerger.WebService
+import me.strava.activitymerger.handler.AuthentificationHandler
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
