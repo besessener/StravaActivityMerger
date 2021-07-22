@@ -1,8 +1,6 @@
 package me.strava.activitymerger.api
 
 
-import io.swagger.client.ApiException
-import io.swagger.client.api.ActivitiesApi
 import me.strava.activitymerger.handler.ActivityHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping

@@ -21,6 +21,7 @@ class AuthenticationApi {
     def getExchangeToken(@RequestParam(required = true) String code) {
         ["token": authentificationHandler.getAuthToken(code)]
     }
+
     @GetMapping("googleApiToken")
     def getGoogleApiKey() {
         ["key": secrets.getSecret('google_api_key')]
