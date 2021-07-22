@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
   loadedToken: string = '';
   tokenAvailable: boolean = false;
   codeAvailable: boolean = false;
+  auth: boolean = false;
 
   activities: any = [];
 
@@ -48,10 +49,13 @@ export class AppComponent implements OnInit {
       this.codeAvailable = true;
       if (!this.loadedToken) {
         this.activitiesRetrieverService.setTokenFromCode(params.code);
-        this._router.navigate(['/'], {queryParams: {code: params.code}});
+        this._router.navigate(['/'], {queryParams: {auth: true}});
       }
+    } else if(params.auth) {
+      this.auth = true;
     } else {
       this.codeAvailable = false;
+      this.auth = false;
     }
   }
 
@@ -68,7 +72,7 @@ export class AppComponent implements OnInit {
   }
 
   public getVisibleComponent() {
-    if (this.tokenAvailable || this.codeAvailable) {
+    if (this.tokenAvailable || this.codeAvailable || this.auth) {
       return 'activity-table';
     }
 

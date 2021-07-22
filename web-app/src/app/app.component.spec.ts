@@ -56,7 +56,8 @@ describe('AppComponent', () => {
       type: 'ride',
       name: 'afternoon ride',
       date: '1-July-2021',
-      elapsedTime: '10 seconds'
+      elapsedTime: '10 seconds',
+      timeInSeconds: 0
     }];
     activitiesRetrieverService.activities.next(data);
     tick(1);

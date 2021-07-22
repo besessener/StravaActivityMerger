@@ -39,6 +39,10 @@ export class ActivityTableComponent {
     this.dataSource.forEach(item => {
       item['date'] = item['startDateLocal']['year'] + '-' + item['startDateLocal']['month'] + '-' + item['startDateLocal']['dayOfMonth'];
 
+      const startDate = new Date(item['startDate']['year'], item['startDate']['monthValue'], item['startDate']['dayOfMonth'], item['startDate']['hour'], item['startDate']['minute'], item['startDate']['second'])
+      const secondsSinceEpoch = Math.round(startDate.getTime() / 1000)
+      item['timeInSeconds'] = secondsSinceEpoch;
+
       item['distance'] = this.meterToKilometer(item['distance'])
       item['totalElevationGain'] = this.meterToKilometer(item['totalElevationGain'])
       item['elevHigh'] = this.meterToKilometer(item['elevHigh'])
@@ -47,9 +51,15 @@ export class ActivityTableComponent {
       item['movingTime'] = this.secondsToHms(item['movingTime']);
       item['elapsedTime'] = this.secondsToHms(item['elapsedTime']);
     })
-    window.setTimeout(() => {
-      this.loading = false;
-    }, 1000);
+
+    let comp = this
+    setTimeout(function waitTableDrawn() {
+      if (document.getElementsByClassName('countable').length < 30) {
+        setTimeout(waitTableDrawn, 500);
+      } else {
+        comp.loading = false;
+      }
+    }, 500);
   }
 
   meterToKilometer(str: string) {
@@ -102,10 +112,23 @@ export class ActivityTableComponent {
     let ids = this.selection.selected.map(activity => {
       return activity.id;
     })
+    let startTime = this.selection.selected.map(activity => {
+      return activity.timeInSeconds;
+    })
+    console.log(this.selection.selected)
     this.loading = true;
     let token = localStorage.getItem('token');
-    this.backendService.mergeActivities(ids, token).subscribe(() => {
-      this.loading = false;
+    this.backendService.mergeActivities(ids, token, Math.min(...startTime)).subscribe(() => {
+      this.selection = new SelectionModel<Activity>(true, []);
+      this._router.navigate(['/'], { skipLocationChange: true });
+      let comp = this
+      setTimeout(function waitTableDrawn() {
+        if (document.getElementsByClassName('countable').length < 30) {
+          setTimeout(waitTableDrawn, 500);
+        } else {
+          comp.loading = false;
+        }
+      }, 500);
     })
   }
 }
@@ -116,4 +139,5 @@ export interface Activity {
   name: string;
   date: string;
   elapsedTime: string;
+  timeInSeconds: number;
 }

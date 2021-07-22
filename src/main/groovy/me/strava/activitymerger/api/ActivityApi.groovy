@@ -18,4 +18,12 @@ class ActivityApi extends BaseApiClient {
             @RequestParam(required = true) String token) {
         return activityHandler.getActivities(getApiClient(token))
     }
+
+    @GetMapping("merge")
+    Object mergeActivities(
+            @RequestParam(required = true) String token,
+            @RequestParam(required = true) String mergeIds,
+            @RequestParam(required = true) Integer start) {
+        return activityHandler.mergeActivities(getApiClient(token), mergeIds.split(',')*.toLong(), start)
+    }
 }

@@ -53,4 +53,35 @@ class ActivityApiTest extends Specification {
         then:
             '' == res
     }
+
+
+    def "/merge : is accessible and successful"() {
+        given:
+            activityHandler.mergeActivities(_, [5, 3, 99], 0) >> '5438958345NewId'
+
+        when:
+            def res = mvc.perform(get('/merge').param('token', '123').param('mergeIds', '5,3,99').param('start', '0'))
+                    .andExpect(status().isOk())
+                    .andReturn()
+                    .response
+                    .contentAsString
+
+        then:
+            '5438958345NewId' == res
+    }
+
+    def "/merge : is accessible but fails with 400 without token parameter"() {
+        given:
+            activityHandler.mergeActivities(_, _, _) >> []
+
+        when:
+            def res = mvc.perform(get('/merge'))
+                    .andExpect(status().isBadRequest())
+                    .andReturn()
+                    .response
+                    .contentAsString
+
+        then:
+            '' == res
+    }
 }

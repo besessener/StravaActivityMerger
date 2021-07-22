@@ -60,7 +60,7 @@ describe('ActivityTableComponent', () => {
     expect(component.isAllSelected()).toBeTrue(); // no data, nothing selected
 
     let data: Activity[] = [
-      {id: 1, type: 'ride', name: 'afternoon ride', date: '1-July-2021', elapsedTime: '10 seconds'}
+      {id: 1, type: 'ride', name: 'afternoon ride', date: '1-July-2021', elapsedTime: '10 seconds', timeInSeconds: 0}
     ];
     component.dataSource = data;
 
@@ -96,11 +96,11 @@ describe('ActivityTableComponent', () => {
   })
 
   it('merge button click does not fail', fakeAsync(() => {
-    let data1: Activity = {id: 1, type: 'ride', name: 'afternoon ride', date: '1-July-2021', elapsedTime: '10 seconds'};
-    let data2: Activity = {id: 2, type: 'canoeing', name: 'canoeing', date: '2-July-2021', elapsedTime: '1 hour'};
+    let data1: Activity = {id: 1, type: 'ride', name: 'afternoon ride', date: '1-July-2021', elapsedTime: '10 seconds', timeInSeconds: 0};
+    let data2: Activity = {id: 2, type: 'canoeing', name: 'canoeing', date: '2-July-2021', elapsedTime: '1 hour', timeInSeconds: 0};
     component.selection.selected.push(data1);
     component.selection.selected.push(data2);
-    spyOn(backendService, "mergeActivities").withArgs([1, 2], '123').and.returnValue(of(''));
+    spyOn(backendService, "mergeActivities").withArgs([1, 2], '123', 0).and.returnValue(of(''));
 
     component.loading = true;
     localStorage.setItem('token', '123');

@@ -25,8 +25,8 @@ export class BackendService {
     return this._http.get(url)
   }
 
-  mergeActivities(ids: number[], token: string | null) {
-    let url = this.baseUrl + 'merge?token=' + token + '&mergeIds=' + ids.join(',');
+  mergeActivities(ids: number[], token: string | null, startTime: number) {
+    let url = this.baseUrl + 'merge?token=' + token + '&mergeIds=' + ids.join(',') + '&start=' + startTime;
     return this._http.get(url)
   }
 }
