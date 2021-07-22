@@ -12,8 +12,7 @@ import {MaterialModule} from "./material-module";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 import {APP_BASE_HREF} from "@angular/common";
-import {LoadComponent} from "./components/load/load.component";
-import { MergerComponent } from './components/merger/merger.component';
+import {LoadComponent} from "./components/activity-table/load/load.component";
 
 @NgModule({
   imports: [
@@ -26,8 +25,8 @@ import { MergerComponent } from './components/merger/merger.component';
     MatNativeDateModule,
     ReactiveFormsModule,
   ],
-  entryComponents: [ActivityTableComponent, LoginComponent, AppComponent, LoadComponent, MergerComponent],
-  declarations: [ActivityTableComponent, LoginComponent, AppComponent, LoadComponent, MergerComponent],
+  entryComponents: [ActivityTableComponent, LoginComponent, AppComponent, LoadComponent],
+  declarations: [ActivityTableComponent, LoginComponent, AppComponent, LoadComponent],
   bootstrap: [AppComponent],
   providers: [
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },

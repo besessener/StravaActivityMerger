@@ -26,6 +26,8 @@ export class ActivityTableComponent {
   expandedElement: Activity | null = null;
   key: string = '';
 
+  loading: boolean = true;
+
   selection = new SelectionModel<Activity>(true, []);
 
   @Input() set activities(value: any[]) {
@@ -45,6 +47,9 @@ export class ActivityTableComponent {
       item['movingTime'] = this.secondsToHms(item['movingTime']);
       item['elapsedTime'] = this.secondsToHms(item['elapsedTime']);
     })
+    window.setTimeout(() => {
+      this.loading = false;
+    }, 1000);
   }
 
   meterToKilometer(str: string) {
@@ -96,9 +101,12 @@ export class ActivityTableComponent {
   mergeButtonClicked() {
     let ids = this.selection.selected.map(activity => {
       return activity.id;
-    }).join(',')
-    console.log(ids)
-    this._router.navigate(['/'], { queryParams: {mergeIds: ids}});
+    })
+    this.loading = true;
+    let token = localStorage.getItem('token');
+    this.backendService.mergeActivities(ids, token).subscribe(() => {
+      this.loading = false;
+    })
   }
 }
 

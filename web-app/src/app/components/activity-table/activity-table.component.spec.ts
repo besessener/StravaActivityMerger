@@ -1,14 +1,19 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import {Activity, ActivityTableComponent} from './activity-table.component';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {RouterModule} from "@angular/router";
+import {LoadComponent} from "./load/load.component";
+import {BackendService} from "../../services/backend/backend.service";
+import {of} from "rxjs";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 describe('ActivityTableComponent', () => {
   let component: ActivityTableComponent;
   let fixture: ComponentFixture<ActivityTableComponent>;
+  let backendService: BackendService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,11 +21,13 @@ describe('ActivityTableComponent', () => {
         HttpClientTestingModule,
         MatTableModule,
         MatCheckboxModule,
-        RouterModule.forRoot([])
+        RouterModule.forRoot([]),
+        MatProgressSpinnerModule
       ],
-      declarations: [ActivityTableComponent]
+      declarations: [ActivityTableComponent, LoadComponent]
     })
       .compileComponents();
+    backendService = TestBed.inject(BackendService);
   });
 
   beforeEach(() => {
@@ -88,12 +95,19 @@ describe('ActivityTableComponent', () => {
     expect(component.dataSource[0].movingTime).toEqual('277 hours, 46 minutes, 40 seconds');
   })
 
-  it('merge button click does not fail', () => {
+  it('merge button click does not fail', fakeAsync(() => {
     let data1: Activity = {id: 1, type: 'ride', name: 'afternoon ride', date: '1-July-2021', elapsedTime: '10 seconds'};
     let data2: Activity = {id: 2, type: 'canoeing', name: 'canoeing', date: '2-July-2021', elapsedTime: '1 hour'};
     component.selection.selected.push(data1);
     component.selection.selected.push(data2);
+    spyOn(backendService, "mergeActivities").withArgs([1, 2], '123').and.returnValue(of(''));
+
+    component.loading = true;
+    localStorage.setItem('token', '123');
+    expect(component.loading).toBeTrue();
+
     component.mergeButtonClicked();
-    expect(true).toBeTrue();
-  })
+    tick(1)
+    expect(component.loading).toBeFalse();
+  }))
 });

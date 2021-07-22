@@ -64,4 +64,19 @@ describe('BackendService', () => {
       req.flush(dummyResponse);
     });
   });
+
+  describe('test mergeActivities', () => {
+    it('should return an Observable<any>[]', () => {
+      let dummyToken = '123';
+      let mergeIds = [1, 2, 3];
+      let dummyResponseNewId = '321';
+      service.mergeActivities(mergeIds, dummyToken).subscribe(newId => {
+        expect(newId).toEqual(dummyResponseNewId);
+      });
+
+      const req = httpMock.expectOne('http://localhost:6001/merge?token=' + dummyToken + '&mergeIds=1,2,3');
+      expect(req.request.method).toBe('GET');
+      req.flush(dummyResponseNewId);
+    });
+  });
 });

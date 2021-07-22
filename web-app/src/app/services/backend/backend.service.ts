@@ -24,4 +24,9 @@ export class BackendService {
     let url = this.baseUrl + 'activityList?token=' + token;
     return this._http.get(url)
   }
+
+  mergeActivities(ids: number[], token: string | null) {
+    let url = this.baseUrl + 'merge?token=' + token + '&mergeIds=' + ids.join(',');
+    return this._http.get(url)
+  }
 }

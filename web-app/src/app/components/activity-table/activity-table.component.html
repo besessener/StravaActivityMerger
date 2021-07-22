@@ -76,3 +76,4 @@
     <button mat-flat-button color="accent" [disabled]="selection.selected.length < 2" (click)="mergeButtonClicked()">Merge</button>
   </div>
 </div>
+<load-component *ngIf="this.loading">Loading</load-component>

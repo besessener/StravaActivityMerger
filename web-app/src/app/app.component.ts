@@ -15,7 +15,6 @@ export class AppComponent implements OnInit {
   codeAvailable: boolean = false;
 
   activities: any = [];
-  mergeIds: any = [];
 
   constructor(public route: ActivatedRoute, public activitiesRetrieverService: ActivitiesRetrieverService, private _router: Router) {
   }
@@ -49,12 +48,8 @@ export class AppComponent implements OnInit {
       this.codeAvailable = true;
       if (!this.loadedToken) {
         this.activitiesRetrieverService.setTokenFromCode(params.code);
+        this._router.navigate(['/'], {queryParams: {code: params.code}});
       }
-    } else if (params.mergeIds) {
-      this.mergeIds = params.mergeIds.split(',').map(function (item: string) {
-        return parseInt(item, 10);
-      });
-      this.codeAvailable = false;
     } else {
       this.codeAvailable = false;
     }
@@ -73,28 +68,10 @@ export class AppComponent implements OnInit {
   }
 
   public getVisibleComponent() {
-    if (this.tokenAvailable) {
-      if (this.mergeIds.length) {
-        return 'merger';
-      }
-
-      if (this.activities.length) {
-        return 'activity-table';
-      }
-
-      if (this.codeAvailable) {
-        return 'loading';
-      }
-    } else {
-      if (this.codeAvailable) {
-        if (!this.activities.length) {
-          return 'loading';
-        }
-      } else {
-        return 'login';
-      }
+    if (this.tokenAvailable || this.codeAvailable) {
+      return 'activity-table';
     }
 
-    return '';
+    return 'login';
   }
 }
