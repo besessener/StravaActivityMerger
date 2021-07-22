@@ -3,6 +3,7 @@ package me.strava.activitymerger.api
 
 import me.strava.activitymerger.WebService
 import me.strava.activitymerger.handler.AuthentificationHandler
+import me.strava.activitymerger.helper.Secrets
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -21,6 +22,9 @@ class AuthenticationApiTest extends Specification {
 
     @SpringBean
     AuthentificationHandler authentificationHandler = Stub()
+
+    @SpringBean
+    Secrets secrets = Mock()
 
     def "/exchangeToken?code : is accessible and returns 200"() {
         given:
@@ -48,5 +52,20 @@ class AuthenticationApiTest extends Specification {
 
         then:
             '' == res
+    }
+
+    def "/googleApiToken : is accessible and returns 200"() {
+        given:
+            secrets.getSecret(_) >> '123'
+
+        when:
+            def response = mvc.perform(get('/googleApiToken'))
+                    .andExpect(status().isOk())
+                    .andReturn()
+                    .response
+                    .contentAsString
+
+        then:
+            "{\"key\":\"123\"}" == response
     }
 }
