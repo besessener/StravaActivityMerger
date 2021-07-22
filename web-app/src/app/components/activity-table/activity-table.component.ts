@@ -27,8 +27,11 @@ export class ActivityTableComponent {
   key: string = '';
 
   loading: boolean = true;
+  allElementsLoaded: boolean = false;
 
   selection = new SelectionModel<Activity>(true, []);
+
+  numberOfRows = 30;
 
   @Input() set activities(value: any[]) {
     this.setActivities(value);
@@ -52,14 +55,7 @@ export class ActivityTableComponent {
       item['elapsedTime'] = this.secondsToHms(item['elapsedTime']);
     })
 
-    let comp = this
-    setTimeout(function waitTableDrawn() {
-      if (document.getElementsByClassName('countable').length < 30) {
-        setTimeout(waitTableDrawn, 500);
-      } else {
-        comp.loading = false;
-      }
-    }, 500);
+    this.waitForDom()
   }
 
   meterToKilometer(str: string) {
@@ -115,21 +111,25 @@ export class ActivityTableComponent {
     let startTime = this.selection.selected.map(activity => {
       return activity.timeInSeconds;
     })
-    console.log(this.selection.selected)
+
     this.loading = true;
     let token = localStorage.getItem('token');
     this.backendService.mergeActivities(ids, token, Math.min(...startTime)).subscribe(() => {
       this.selection = new SelectionModel<Activity>(true, []);
       this._router.navigate(['/'], { skipLocationChange: true });
-      let comp = this
-      setTimeout(function waitTableDrawn() {
-        if (document.getElementsByClassName('countable').length < 30) {
-          setTimeout(waitTableDrawn, 500);
-        } else {
-          comp.loading = false;
-        }
-      }, 500);
+      this.waitForDom()
     })
+  }
+
+  waitForDom() {
+    setTimeout(() => {
+      if (!this.allElementsLoaded) {
+        this.allElementsLoaded = document.getElementsByClassName('countable').length == this.numberOfRows
+        this.waitForDom()
+      } else {
+        this.loading = false;
+      }
+    }, 500);
   }
 }
 

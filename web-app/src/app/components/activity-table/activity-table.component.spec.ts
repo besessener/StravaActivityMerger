@@ -24,7 +24,7 @@ describe('ActivityTableComponent', () => {
         RouterModule.forRoot([]),
         MatProgressSpinnerModule
       ],
-      declarations: [ActivityTableComponent, LoadComponent]
+      declarations: [ActivityTableComponent, LoadComponent],
     })
       .compileComponents();
     backendService = TestBed.inject(BackendService);
@@ -80,6 +80,7 @@ describe('ActivityTableComponent', () => {
         date: '1-July-2021',
         elapsedTime: '10 seconds',
         startDateLocal: {year: '2021', month: '5', dayOfMonth: '15'},
+        startDate: {year: '2021', month: '5', dayOfMonth: '15', hour: '1', minute: '13', second: '21'},
         distance: '500',
         totalElevationGain: '1001',
         elevHigh: '20',
@@ -107,7 +108,8 @@ describe('ActivityTableComponent', () => {
     expect(component.loading).toBeTrue();
 
     component.mergeButtonClicked();
-    tick(1)
+    component.allElementsLoaded = true;
+    tick(1000);
     expect(component.loading).toBeFalse();
   }))
 });
