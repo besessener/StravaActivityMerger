@@ -2,6 +2,7 @@ package me.strava.activitymerger.api
 
 
 import me.strava.activitymerger.handler.AuthentificationHandler
+import me.strava.activitymerger.helper.AppConstants
 import me.strava.activitymerger.helper.Secrets
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,11 +20,11 @@ class AuthenticationApi {
 
     @GetMapping("exchangeToken")
     def getExchangeToken(@RequestParam(required = true) String code) {
-        ["token": authentificationHandler.getAuthToken(code)]
+        [token: authentificationHandler.getAuthToken(code)]
     }
 
     @GetMapping("googleApiToken")
     def getGoogleApiKey() {
-        ["key": secrets.getSecret('google_api_key')]
+        [key: secrets.getSecret(AppConstants.SECRET_GOOGLE_API_KEY)]
     }
 }

@@ -101,7 +101,9 @@ describe('ActivityTableComponent', () => {
     let data2: Activity = {id: 2, type: 'canoeing', name: 'canoeing', date: '2-July-2021', elapsedTime: '1 hour', timeInSeconds: 0};
     component.selection.selected.push(data1);
     component.selection.selected.push(data2);
-    spyOn(backendService, "mergeActivities").withArgs([1, 2], '123', 0).and.returnValue(of(''));
+    spyOn(backendService, "mergeActivities")
+      .withArgs({token: '123', mergeItems: {'1': 0, '2': 0}})
+      .and.returnValue(of(''));
 
     component.loading = true;
     localStorage.setItem('token', '123');

@@ -29,8 +29,8 @@ class AuthentificationHandler {
         http.post(
                 path: '/oauth/token',
                 body: [
-                        client_id    : secrets.getSecret('client_id'),
-                        client_secret: secrets.getSecret('client_secret'),
+                        client_id    : secrets.getSecret(AppConstants.SECRET_STRAVA_CLIENT_ID),
+                        client_secret: secrets.getSecret(AppConstants.SECRET_STRAVA_CLIENT_SECRET),
                         grant_type   : "authorization_code",
                         code         : exchangeToken
                 ]) { resp, reader ->

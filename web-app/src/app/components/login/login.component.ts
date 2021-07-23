@@ -16,7 +16,7 @@ export class LoginComponent {
     let STRAVA_BASE_URL = 'http://www.strava.com/';
     let STRAVA_REDIRECT_URL = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port;
     let client_id = "66715";
-    this.STRAVA_AUTH_URL = STRAVA_BASE_URL + 'oauth/authorize?client_id=' + client_id + '&approval_prompt=force&scope=activity:read_all&response_type=code&redirect_uri=' + STRAVA_REDIRECT_URL;
+    this.STRAVA_AUTH_URL = STRAVA_BASE_URL + 'oauth/authorize?client_id=' + client_id + '&approval_prompt=force&scope=activity:read_all,activity:write&response_type=code&redirect_uri=' + STRAVA_REDIRECT_URL;
 
     _route.queryParams.subscribe((params: Params) => {
       if (params.error) {

@@ -4,6 +4,8 @@ package me.strava.activitymerger.api
 import me.strava.activitymerger.handler.ActivityHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
@@ -19,11 +21,11 @@ class ActivityApi extends BaseApiClient {
         return activityHandler.getActivities(getApiClient(token))
     }
 
-    @GetMapping("merge")
+    @PostMapping("merge")
     Object mergeActivities(
-            @RequestParam(required = true) String token,
-            @RequestParam(required = true) String mergeIds,
-            @RequestParam(required = true) Integer start) {
-        return activityHandler.mergeActivities(getApiClient(token), mergeIds.split(',')*.toLong(), start)
+            @RequestBody Map<String, Object> body) {
+        String token = body.token
+        HashMap<String, Integer> mergeItems = body.mergeItems as HashMap<String, Integer>
+        return activityHandler.mergeActivities(getApiClient(token), mergeItems)
     }
 }

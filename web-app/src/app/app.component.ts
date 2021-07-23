@@ -51,6 +51,9 @@ export class AppComponent implements OnInit {
         this.activitiesRetrieverService.setTokenFromCode(params.code);
         this._router.navigate(['/'], {queryParams: {auth: true}});
       }
+    } else if (params.refresh){
+      let token = localStorage.getItem('token');
+      this.activitiesRetrieverService.setActivitiesWithToken(token ? token : '')
     } else if(params.auth) {
       this.auth = true;
     } else {

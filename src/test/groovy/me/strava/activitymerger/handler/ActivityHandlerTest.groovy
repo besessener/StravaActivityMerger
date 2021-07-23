@@ -4,6 +4,7 @@ import io.swagger.client.ApiClient
 import io.swagger.client.ApiException
 import io.swagger.client.api.ActivitiesApi
 import io.swagger.client.api.StreamsApi
+import io.swagger.client.api.UploadsApi
 import io.swagger.client.model.*
 import me.strava.activitymerger.WebService
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,12 +49,12 @@ class ActivityHandlerTest extends Specification {
 
     def "merge returns 'OK'"() {
         expect:
-            activityHandler.mergeActivities(new ApiClient(), [], 0) == [status: 'OK']
+            activityHandler.mergeActivities(new ApiClient(), [:]) == [status: 'OK']
     }
 
     def "test get stream data from list of ids with empty input"() {
         expect:
-            activityHandler.createStreamDataMap(new StreamsApi(), []) == []
+            activityHandler.createStreamDataMap(new StreamsApi(), [:]) == []
     }
 
     def "get streams with mocked streamset but return data"() {
@@ -81,10 +82,11 @@ class ActivityHandlerTest extends Specification {
             streamsApi.getActivityStreams(_, _, _) >> actStreamSet
 
         when:
-            def result = activityHandler.createStreamDataMap(streamsApi, [123])
+            def result = activityHandler.createStreamDataMap(streamsApi, ['123': 0])
 
         then:
             result.size() == 2
+            result[0].startTime == 0
             result[0].id == 123
             result[1].id == 123 // to stream entries for one id
             result[0].time == 1
@@ -122,8 +124,8 @@ class ActivityHandlerTest extends Specification {
             streamsApi.getActivityStreams(_, _, _) >> actStreamSet
 
         when:
-            def result = activityHandler.createStreamDataMap(streamsApi, [123])
-            def gpx = activityHandler.createGpx(result, 60)
+            def result = activityHandler.createStreamDataMap(streamsApi, ['123': 60])
+            def gpx = activityHandler.createGpx(result)
             def gpxRoot = new XmlSlurper().parseText(gpx)
 
         then:
@@ -132,6 +134,11 @@ class ActivityHandlerTest extends Specification {
             gpxRoot.trk.size() == 1
             gpxRoot.trk.trkseg.size() == 1
             gpxRoot.trk.trkseg.trkpt.size() == 2
+
+            gpxRoot.metadata.time.text() == "1970-01-01T00:01:00Z"
+
+            gpxRoot.trk.name.text() != ""
+            gpxRoot.trk.type.text() == "1"
 
             gpxRoot.trk.trkseg.trkpt[0].@lat == "12.0"
             gpxRoot.trk.trkseg.trkpt[0].@lon == "9.5"
@@ -143,5 +150,21 @@ class ActivityHandlerTest extends Specification {
 
             gpxRoot.trk.trkseg.trkpt[0].time.text() == "1970-01-01T00:01:01Z"
             gpxRoot.trk.trkseg.trkpt[1].time.text() == "1970-01-01T00:01:03Z"
+    }
+
+    def "test activity creation"() {
+        given:
+            UploadsApi api = Mock(UploadsApi)
+            ActivitiesApi actApi = Mock(ActivitiesApi)
+            Upload upload = Mock(Upload)
+            upload.setActivityId(1)
+
+        when:
+            activityHandler.createNewActivity(api, actApi, '<gpx />')
+
+        then:
+            1 * api.createUpload(_, 'New Merged Activity', '', '', '', 'gpx', _) >> { upload }
+            1 * actApi.getLoggedInAthleteActivities(_, 0, 1, 30) >> { throw new ApiException() }
+            2 * actApi.getLoggedInAthleteActivities(_, 0, 1, 30) >> new ArrayList<SummaryActivity>()
     }
 }

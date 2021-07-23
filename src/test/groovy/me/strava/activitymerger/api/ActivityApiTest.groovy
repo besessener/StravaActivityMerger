@@ -1,18 +1,18 @@
 package me.strava.activitymerger.api
 
-import io.swagger.client.ApiClient
-import io.swagger.client.ApiException
-import io.swagger.client.api.ActivitiesApi
+import groovy.json.JsonOutput
 import me.strava.activitymerger.WebService
 import me.strava.activitymerger.handler.ActivityHandler
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import spock.lang.Specification
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @AutoConfigureMockMvc
@@ -57,10 +57,12 @@ class ActivityApiTest extends Specification {
 
     def "/merge : is accessible and successful"() {
         given:
-            activityHandler.mergeActivities(_, [5, 3, 99], 0) >> '5438958345NewId'
+            def mergeItems = ['5': 1, '3': 0, '99': 2]
+            activityHandler.mergeActivities(_, mergeItems) >> '5438958345NewId'
+            def mergeItemsAsJsonString = JsonOutput.prettyPrint(JsonOutput.toJson([token: '123', mergeItems: mergeItems]))
 
         when:
-            def res = mvc.perform(get('/merge').param('token', '123').param('mergeIds', '5,3,99').param('start', '0'))
+            def res = mvc.perform(post('/merge').contentType(MediaType.APPLICATION_JSON).content(mergeItemsAsJsonString))
                     .andExpect(status().isOk())
                     .andReturn()
                     .response
@@ -72,10 +74,10 @@ class ActivityApiTest extends Specification {
 
     def "/merge : is accessible but fails with 400 without token parameter"() {
         given:
-            activityHandler.mergeActivities(_, _, _) >> []
+            activityHandler.mergeActivities(_, _) >> []
 
         when:
-            def res = mvc.perform(get('/merge'))
+            def res = mvc.perform(post('/merge'))
                     .andExpect(status().isBadRequest())
                     .andReturn()
                     .response

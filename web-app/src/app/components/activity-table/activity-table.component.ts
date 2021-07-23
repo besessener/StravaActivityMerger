@@ -3,6 +3,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {BackendService} from "../../services/backend/backend.service";
 import {SelectionModel} from "@angular/cdk/collections";
 import {Router} from "@angular/router";
+import {ActivitiesRetrieverService} from "../../services/activities-retriever/activities-retriever.service";
 
 /**
  * @title Table with expandable rows
@@ -42,7 +43,7 @@ export class ActivityTableComponent {
     this.dataSource.forEach(item => {
       item['date'] = item['startDateLocal']['year'] + '-' + item['startDateLocal']['month'] + '-' + item['startDateLocal']['dayOfMonth'];
 
-      const startDate = new Date(item['startDate']['year'], item['startDate']['monthValue'], item['startDate']['dayOfMonth'], item['startDate']['hour'], item['startDate']['minute'], item['startDate']['second'])
+      const startDate = new Date(item['startDate']['year'], item['startDate']['monthValue'] == 12 ? 0 : item['startDate']['monthValue'] - 1, item['startDate']['dayOfMonth'], item['startDate']['hour'], item['startDate']['minute'], item['startDate']['second'])
       const secondsSinceEpoch = Math.round(startDate.getTime() / 1000)
       item['timeInSeconds'] = secondsSinceEpoch;
 
@@ -98,26 +99,30 @@ export class ActivityTableComponent {
       });
   }
 
-  constructor(private backendService: BackendService, private _router: Router) {
+  constructor(private backendService: BackendService, private activitiesRetriever: ActivitiesRetrieverService, private _router: Router) {
     backendService.getApiKey().subscribe((data: any) => {
       this.key = data.key;
     })
   }
 
   mergeButtonClicked() {
-    let ids = this.selection.selected.map(activity => {
-      return activity.id;
-    })
-    let startTime = this.selection.selected.map(activity => {
-      return activity.timeInSeconds;
-    })
-
     this.loading = true;
     let token = localStorage.getItem('token');
-    this.backendService.mergeActivities(ids, token, Math.min(...startTime)).subscribe(() => {
+
+    let mergeItems: any = {}
+    this.selection.selected.forEach(activity => {
+      mergeItems[activity.id.toString()] = activity.timeInSeconds
+    })
+
+    let activityDataToPost = {
+      token: token,
+      mergeItems: mergeItems
+    };
+
+    this.backendService.mergeActivities(activityDataToPost).subscribe(() => {
       this.selection = new SelectionModel<Activity>(true, []);
-      this._router.navigate(['/'], { skipLocationChange: true });
-      this.waitForDom()
+      this._router.navigate(['/'], { queryParams: {refresh: Math.random()} });
+      this.waitForDom();
     })
   }
 
