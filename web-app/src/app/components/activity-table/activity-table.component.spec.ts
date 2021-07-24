@@ -79,7 +79,7 @@ describe('ActivityTableComponent', () => {
         name: 'afternoon ride',
         date: '1-July-2021',
         elapsedTime: '10 seconds',
-        startDateLocal: {year: '2021', month: '5', dayOfMonth: '15'},
+        startDateLocal: {year: '2021', month: '5', dayOfMonth: '15', hour: '1', minute: '45', second: '22'},
         startDate: {year: '2021', month: '5', dayOfMonth: '15', hour: '1', minute: '13', second: '21'},
         distance: '500',
         totalElevationGain: '1001',
@@ -114,4 +114,10 @@ describe('ActivityTableComponent', () => {
     tick(1000);
     expect(component.loading).toBeFalse();
   }))
+
+  it('detect merge status on externalId', () => {
+    expect(component.isMerged({})).toBeFalse();
+    expect(component.isMerged({externalId: 'something'})).toBeFalse();
+    expect(component.isMerged({externalId: 'merged_activity_gpx_something'})).toBeTrue();
+  })
 });

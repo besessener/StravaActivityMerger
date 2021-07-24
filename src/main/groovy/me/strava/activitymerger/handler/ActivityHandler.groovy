@@ -109,16 +109,16 @@ class ActivityHandler {
     }
 
     def createNewActivity(UploadsApi api, ActivitiesApi activitiesApi, String gpx) {
-        File tmpFile = File.createTempFile("merged_activity_gpx_",".gpx")
+        def currentTime = System.currentTimeSeconds().toInteger()
+        File tmpFile = File.createTempFile("merged_activity_gpx_${currentTime}_",".gpx")
         tmpFile.write(gpx)
         try {
             api.createUpload(tmpFile, NEW_ACTIVITY_NAME, '', '', '', 'gpx', tmpFile.name)
-            boolean created = false
             for (def i : (1..3)) {
                 sleep(3 * 1000)
                 try {
                     def found = activitiesApi
-                            .getLoggedInAthleteActivities(System.currentTimeSeconds().toInteger(), 0, 1, 30)
+                            .getLoggedInAthleteActivities(currentTime, 0, 1, 30)
                             .find{it.getExternalId() == tmpFile.name}
                     if (found) break
                 } catch (ApiException e) {

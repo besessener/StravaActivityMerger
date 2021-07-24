@@ -69,6 +69,7 @@
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay" class="header"></tr>
     <tr mat-row *matRowDef="let element; columns: columnsToDisplay;"
         class="element-row"
+        [class.merged-element]="this.isMerged(element)"
         [class.expanded-row]="expandedElement === element"
         (click)="expandedElement = expandedElement === element ? null : element;">
     </tr>

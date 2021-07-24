@@ -43,8 +43,8 @@ export class ActivityTableComponent {
     this.dataSource.forEach(item => {
       item['date'] = item['startDateLocal']['year'] + '-' + item['startDateLocal']['month'] + '-' + item['startDateLocal']['dayOfMonth'];
 
-      const startDate = new Date(item['startDate']['year'], item['startDate']['monthValue'] == 12 ? 0 : item['startDate']['monthValue'] - 1, item['startDate']['dayOfMonth'], item['startDate']['hour'], item['startDate']['minute'], item['startDate']['second'])
-      const secondsSinceEpoch = Math.round(startDate.getTime() / 1000)
+      const startDate = new Date(item['startDateLocal']['year'], item['startDateLocal']['monthValue'] == 12 ? 0 : item['startDateLocal']['monthValue'] - 1, item['startDateLocal']['dayOfMonth'], item['startDateLocal']['hour'], item['startDateLocal']['minute'], item['startDateLocal']['second'])
+      const secondsSinceEpoch = Math.round(startDate.getTime() / 1000) - 31; // trick stravas duplicate detection
       item['timeInSeconds'] = secondsSinceEpoch;
 
       item['distance'] = this.meterToKilometer(item['distance'])
@@ -135,6 +135,14 @@ export class ActivityTableComponent {
         this.loading = false;
       }
     }, 500);
+  }
+
+  isMerged(element: any) {
+    if (element.externalId) {
+      return element.externalId.includes('merged_activity_gpx_');
+    }
+
+    return false;
   }
 }
 
