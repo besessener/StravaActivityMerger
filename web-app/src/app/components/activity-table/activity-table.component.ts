@@ -43,7 +43,7 @@ export class ActivityTableComponent {
     this.dataSource.forEach(item => {
       item['date'] = item['startDateLocal']['year'] + '-' + item['startDateLocal']['month'] + '-' + item['startDateLocal']['dayOfMonth'];
 
-      const startDate = new Date(item['startDateLocal']['year'], item['startDateLocal']['monthValue'] == 12 ? 0 : item['startDateLocal']['monthValue'] - 1, item['startDateLocal']['dayOfMonth'], item['startDateLocal']['hour'], item['startDateLocal']['minute'], item['startDateLocal']['second'])
+      const startDate = new Date(item['startDateLocal']['year'], item['startDateLocal']['monthValue'] - 1, item['startDateLocal']['dayOfMonth'], item['startDateLocal']['hour'], item['startDateLocal']['minute'], item['startDateLocal']['second'])
       const secondsSinceEpoch = Math.round(startDate.getTime() / 1000) - 31; // trick stravas duplicate detection
       item['timeInSeconds'] = secondsSinceEpoch;
 

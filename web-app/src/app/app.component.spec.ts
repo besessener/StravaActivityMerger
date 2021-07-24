@@ -3,10 +3,14 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {AppComponent} from './app.component';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {ActivitiesRetrieverService} from "./services/activities-retriever/activities-retriever.service";
-import {Activity} from "./components/activity-table/activity-table.component";
+import {Activity, ActivityTableComponent} from "./components/activity-table/activity-table.component";
 import {ActivatedRoute, RouterModule} from "@angular/router";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, of} from "rxjs";
 import {LoginComponent} from "./components/login/login.component";
+import {LoadComponent} from "./components/activity-table/load/load.component";
+import {MatTableModule} from "@angular/material/table";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 describe('AppComponent', () => {
   let activitiesRetrieverService: ActivitiesRetrieverService;
@@ -17,11 +21,16 @@ describe('AppComponent', () => {
       imports: [
         RouterTestingModule,
         HttpClientTestingModule,
-        RouterModule.forRoot([])
+        RouterModule.forRoot([]),
+        MatTableModule,
+        MatCheckboxModule,
+        MatProgressSpinnerModule
       ],
       declarations: [
         AppComponent,
-        LoginComponent
+        LoginComponent,
+        ActivityTableComponent,
+        LoadComponent
       ],
     }).compileComponents();
 
@@ -41,6 +50,19 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     expect(app.title).toEqual('Activity Merger');
   });
+
+  it('onInit set token', () => {
+    localStorage.clear();
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    localStorage.setItem('token', '123');
+    spyOn(app.activitiesRetrieverService.token, "next");
+    spyOn(app.activitiesRetrieverService.token, "subscribe");
+    spyOn(app.activitiesRetrieverService.activities, "subscribe");
+    fixture.detectChanges();
+    expect(app.activitiesRetrieverService.token.next).toHaveBeenCalled();
+    expect(app.loadedToken).toEqual('123');
+  })
 
   it('activities subsription', fakeAsync(() => {
     localStorage.clear();
@@ -78,6 +100,7 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     let params = new BehaviorSubject<any>({});
     route.queryParams = params;
+    localStorage.setItem('token', '');
     fixture.detectChanges();
 
     app.codeAvailable = false;
@@ -90,6 +113,16 @@ describe('AppComponent', () => {
     params.next({code: '123'});
     tick(1);
     expect(app.codeAvailable).toBeTrue();
+
+    spyOn(activitiesRetrieverService, "setActivitiesWithToken");
+    params.next({refresh: 0.123});
+    tick(1);
+    expect(activitiesRetrieverService.setActivitiesWithToken).toHaveBeenCalled();
+
+    localStorage.setItem('token', '123');
+    params.next({refresh: 0.123});
+    tick(1);
+    expect(activitiesRetrieverService.setActivitiesWithToken).toHaveBeenCalled();
 
     app.codeAvailable = true;
     params.next({});

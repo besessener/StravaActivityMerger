@@ -10,7 +10,7 @@ import {ActivitiesRetrieverService} from "./services/activities-retriever/activi
 export class AppComponent implements OnInit {
   title = 'Activity Merger';
 
-  loadedToken: string = '';
+  loadedToken: string| null = '';
   tokenAvailable: boolean = false;
   codeAvailable: boolean = false;
   auth: boolean = false;
@@ -21,8 +21,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let loadedToken = localStorage.getItem('token')
-    this.tokenAvailable = loadedToken != null && loadedToken != ''
+    this.loadedToken = localStorage.getItem('token')
+    this.tokenAvailable = this.loadedToken != null && this.loadedToken != ''
 
     this.activitiesRetrieverService.activities.subscribe(activities => {
       this.setActivityData(activities);
@@ -39,8 +39,8 @@ export class AppComponent implements OnInit {
       this.onQueryParamChanged(params)
     });
 
-    if (loadedToken) {
-      this.activitiesRetrieverService.token.next(loadedToken);
+    if (this.loadedToken) {
+      this.activitiesRetrieverService.token.next(this.loadedToken);
     }
   }
 
