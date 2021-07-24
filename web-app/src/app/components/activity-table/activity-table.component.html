@@ -8,7 +8,7 @@
       <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
         <div class="element-detail"
              [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <img src="https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&key={{key}}&path=enc:{{element.map.summaryPolyline}}"/>
+          <img [src]="getImageUrl(element)" />
           <div class="element-description">
             <span class="element-description-attribution">name: {{element.name}} <br/> distance: {{element.distance}} <br/> total elevation gain {{element.totalElevationGain}} <br/> moving time: {{element.movingTime}} <br/> highest elevation: {{element.elevHigh}} <br/> lowest elevation: {{element.elevLow}}</span>
             <br/><br/>

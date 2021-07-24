@@ -120,4 +120,12 @@ describe('ActivityTableComponent', () => {
     expect(component.isMerged({externalId: 'something'})).toBeFalse();
     expect(component.isMerged({externalId: 'merged_activity_gpx_something'})).toBeTrue();
   })
+
+  it('lazy load google maps to save money', () => {
+    let element: any = {id: 0, map: {summaryPolyline: '1zP!@~~an'}}
+    expect(component.getImageUrl(element)).toEqual(undefined);
+
+    component.expandedElement = element;
+    expect(component.getImageUrl(element)).toEqual('https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&key=&path=enc:1zP!@~~an');
+  })
 });

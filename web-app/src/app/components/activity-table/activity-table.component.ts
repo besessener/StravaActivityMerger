@@ -22,6 +22,7 @@ import {ActivitiesRetrieverService} from "../../services/activities-retriever/ac
 })
 export class ActivityTableComponent {
   dataSource: any[] = [];
+  imageUrls: any = {};
   columnsToDisplay = ['select', 'id', 'type', 'name', 'date', 'elapsedTime'];
 
   expandedElement: Activity | null = null;
@@ -144,6 +145,14 @@ export class ActivityTableComponent {
     }
 
     return false;
+  }
+
+  getImageUrl(element: any) {
+    if (element == this.expandedElement) {
+      this.imageUrls[element.id] = "https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&key=" + this.key + "&path=enc:" + element.map.summaryPolyline;
+    }
+
+    return this.imageUrls[element.id];
   }
 }
 
