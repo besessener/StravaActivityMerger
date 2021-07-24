@@ -79,6 +79,7 @@ class ActivityHandler {
 
     String createGpx(ArrayList<StreamData> streamData, String typeName) {
         int convertedType = getConvertedType(typeName)
+        String startTime = calcTime(0, streamData.isEmpty() ? 0 : streamData.sort{it.startTime}[0].startTime)
 
         def stringWriter = new StringWriter()
         def gpxBuilder = new MarkupBuilder(stringWriter)
@@ -86,7 +87,7 @@ class ActivityHandler {
         gpxBuilder.mkp.xmlDeclaration(version: "1.0", encoding: "utf-8")
         gpxBuilder.gpx() {
             metadata() {
-                time(calcTime(0, streamData.isEmpty() ? 0 : streamData.sort{it.startTime}[0].startTime))
+                time(startTime)
             }
             trk() {
                 name(NEW_ACTIVITY_NAME)
@@ -137,7 +138,7 @@ class ActivityHandler {
 
     private String calcTime(int offset, start) {
         Instant instant = Instant.ofEpochSecond(start).truncatedTo( ChronoUnit.SECONDS )
-        instant.plusSeconds(offset.toInteger()).toString()
+        instant.plusSeconds(offset).toString()
     }
 
     def createNewActivity(UploadsApi api, ActivitiesApi activitiesApi, String gpx) {

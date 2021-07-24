@@ -59,9 +59,14 @@ include::docs/api/index.adoc[]
 
 = How it looks
 
-image::docs/connect-page.jpg[]
-image::docs/oauth2strava.jpg[]
+You can login to Strava with OAuth, no additional credentials required.
 
-and the following page is currently only loading recent activities into a table, showing some details and a map with polylines. You can also select activities, which will change the active state of the `Merge`-button. BUT it does not yet offer the possibility to really merge activities.
+image::docs/login.gif[]
 
-image::docs/list-activities-with-map-selection.png[]
+As soon as you are authorized, a table view will open, showing your most recent activities. Clicking on a row will show details and a map.
+
+image::docs/table.gif[]
+
+You can select multiple rows/activities with the checkboxes at the left side. Whenever you have 2 or more activities selected, the `merge` button will become active. Clicking on `merge` might take some seconds (~8s) before the table is reloaded and shows the new activity. Merged activities get a noticeable pink border.
+
+image::docs/merge.gif[]
