@@ -109,14 +109,15 @@ export class ActivityTableComponent {
     this.loading = true;
     let token = localStorage.getItem('token');
 
-    let mergeItems: any = {}
+    let mergeItems: any = {};
     this.selection.selected.forEach(activity => {
-      mergeItems[activity.id.toString()] = activity.timeInSeconds
+      mergeItems[activity.id.toString()] = activity.timeInSeconds;
     })
 
     let activityDataToPost = {
       token: token,
-      mergeItems: mergeItems
+      mergeItems: mergeItems,
+      type: this.selection.selected[0].type,
     };
 
     this.backendService.mergeActivities(activityDataToPost).subscribe(() => {

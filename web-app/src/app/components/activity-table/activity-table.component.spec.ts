@@ -102,7 +102,7 @@ describe('ActivityTableComponent', () => {
     component.selection.selected.push(data1);
     component.selection.selected.push(data2);
     spyOn(backendService, "mergeActivities")
-      .withArgs({token: '123', mergeItems: {'1': 0, '2': 0}})
+      .withArgs({token: '123', mergeItems: {'1': 0, '2': 0}, type: 'ride'})
       .and.returnValue(of(''));
 
     component.loading = true;

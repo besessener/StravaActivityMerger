@@ -49,7 +49,7 @@ class ActivityHandlerTest extends Specification {
 
     def "merge returns 'OK'"() {
         expect:
-            activityHandler.mergeActivities(new ApiClient(), [:]) == [status: 'OK']
+            activityHandler.mergeActivities(new ApiClient(), [:], 'RIDE') == [status: 'OK']
     }
 
     def "test get stream data from list of ids with empty input"() {
@@ -125,7 +125,7 @@ class ActivityHandlerTest extends Specification {
 
         when:
             def result = activityHandler.createStreamDataMap(streamsApi, ['123': 60])
-            def gpx = activityHandler.createGpx(result)
+            def gpx = activityHandler.createGpx(result, 'RIDE')
             def gpxRoot = new XmlSlurper().parseText(gpx)
 
         then:

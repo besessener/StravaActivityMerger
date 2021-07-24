@@ -46,9 +46,9 @@ class ActivityHandler {
         response
     }
 
-    Object mergeActivities(ApiClient apiClient, HashMap<String, Integer> mergeItems) {
+    Object mergeActivities(ApiClient apiClient, HashMap<String, Integer> mergeItems, String type) {
         def values = createStreamDataMap(new StreamsApi(apiClient), mergeItems)
-        def gpx = createGpx(values)
+        def gpx = createGpx(values, type)
         createNewActivity(new UploadsApi(apiClient), new ActivitiesApi(apiClient), gpx)
         [status: 'OK']
     }
@@ -77,7 +77,9 @@ class ActivityHandler {
         return data.sort { it.time }
     }
 
-    String createGpx(ArrayList<StreamData> streamData) {
+    String createGpx(ArrayList<StreamData> streamData, String typeName) {
+        int convertedType = getConvertedType(typeName)
+
         def stringWriter = new StringWriter()
         def gpxBuilder = new MarkupBuilder(stringWriter)
 
@@ -88,7 +90,7 @@ class ActivityHandler {
             }
             trk() {
                 name(NEW_ACTIVITY_NAME)
-                type(1)
+                type(convertedType)
                 trkseg() {
                     for (def item : streamData) {
                         trkpt(lat: item.latitude, lon: item.longitude) {
@@ -101,6 +103,36 @@ class ActivityHandler {
         }
 
         stringWriter.toString()
+    }
+
+    private int getConvertedType(String type) {
+        [
+                'RIDE': 1,
+                'ALPINESKI': 2,
+                'BACKCOUNTRYSKI': 3,
+                'HIKE': 4,
+                'ICESKATE': 5,
+                'INLINESKATE': 6,
+                'NORDICSKI': 7,
+                'ROLLERSKI': 8,
+                'RUN': 9,
+                'WALK': 10,
+                'SNOWBOARD': 12,
+                'SNOWSHOE': 13,
+                'KITESURF': 14,
+                'WINDSURF': 15,
+                'SWIM': 16,
+                'EBIKERIDE': 18,
+                'VELOMOBILE': 19,
+                'CANOEING': 21,
+                'KAYAKING': 22,
+                'ROWING': 23,
+                'STANDUPPADDLING': 24,
+                'SURFING': 25,
+                'HANDCYCLE': 51,
+                'WHEELCHAIR': 52,
+
+        ][type.toUpperCase()]
     }
 
     private String calcTime(int offset, start) {
