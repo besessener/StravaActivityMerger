@@ -1,3 +1,19 @@
+This is a Spring Boot Groovy App with Angular Frontend that displays Strava activities and enables you to merge activites into a new one.
+
+= How it looks
+
+You can login to Strava with OAuth, no additional credentials required.
+
+image::docs/login.gif[]
+
+As soon as you are authorized, a table view will open, showing your most recent activities. Clicking on a row will show details and a map.
+
+image::docs/table.gif[]
+
+You can select multiple rows/activities with the checkboxes at the left side. Whenever you have 2 or more activities selected, the `merge` button will become active. Clicking on `merge` might take some seconds (~8s) before the table is reloaded and shows the new activity. Merged activities get a noticeable pink border.
+
+image::docs/merge.gif[]
+
 = Setup
 
 == Get Strava API specification
@@ -56,17 +72,3 @@ Done.
 = Strava API
 
 include::docs/api/index.adoc[]
-
-= How it looks
-
-You can login to Strava with OAuth, no additional credentials required.
-
-image::docs/login.gif[]
-
-As soon as you are authorized, a table view will open, showing your most recent activities. Clicking on a row will show details and a map.
-
-image::docs/table.gif[]
-
-You can select multiple rows/activities with the checkboxes at the left side. Whenever you have 2 or more activities selected, the `merge` button will become active. Clicking on `merge` might take some seconds (~8s) before the table is reloaded and shows the new activity. Merged activities get a noticeable pink border.
-
-image::docs/merge.gif[]
