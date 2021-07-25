@@ -17,7 +17,6 @@ subprojects {
 apply plugin: "com.github.johnrengelman.processes"
 apply plugin: "org.springdoc.openapi-gradle-plugin"
 apply plugin: 'org.openapi.generator'
-apply plugin: 'idea'
 
 group = 'me.strava.activitymerger'
 version = '0.1'
