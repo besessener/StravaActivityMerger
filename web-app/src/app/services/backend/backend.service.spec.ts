@@ -29,7 +29,7 @@ describe('BackendService', () => {
         expect(token).toEqual(dummyResponse);
       });
 
-      const req = httpMock.expectOne('http://localhost:6001/exchangeToken?code=' + dummyCode);
+      const req = httpMock.expectOne('http://localhost:8080/exchangeToken?code=' + dummyCode);
       expect(req.request.method).toBe('GET');
       req.flush(dummyResponse);
     });
@@ -42,7 +42,7 @@ describe('BackendService', () => {
         expect(token).toEqual(dummyResponse);
       });
 
-      const req = httpMock.expectOne('http://localhost:6001/googleApiToken');
+      const req = httpMock.expectOne('http://localhost:8080/googleApiToken');
       expect(req.request.method).toBe('GET');
       req.flush(dummyResponse);
     });
@@ -59,7 +59,7 @@ describe('BackendService', () => {
         expect(activities).toEqual(dummyResponse);
       });
 
-      const req = httpMock.expectOne('http://localhost:6001/activityList?token=' + dummyToken);
+      const req = httpMock.expectOne('http://localhost:8080/activityList?token=' + dummyToken);
       expect(req.request.method).toBe('GET');
       req.flush(dummyResponse);
     });
@@ -74,7 +74,7 @@ describe('BackendService', () => {
         expect(newId).toEqual(dummyResponseNewId);
       });
 
-      const req = httpMock.expectOne('http://localhost:6001/merge');
+      const req = httpMock.expectOne('http://localhost:8080/merge');
       expect(req.request.method).toBe('POST');
       req.flush(dummyResponseNewId);
     });

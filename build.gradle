@@ -101,7 +101,7 @@ openApi {
     outputDir.set(file("${project.getRootDir()}/docs/api-definition"))
     outputFileName.set("api-definition.yaml")
     waitTimeInSeconds.set(15)
-    apiDocsUrl.set("http://localhost:6001/v3/api-docs")
+    apiDocsUrl.set("http://localhost:8080/v3/api-docs")
 }
 
 openApiGenerate {
@@ -134,7 +134,7 @@ task runSwaggerCodeGen(type: Exec, dependsOn: ['downloadSwaggerJar', 'downloadSt
     commandLine "java", "-jar", "$buildDir\\generated\\strava-api-definition\\swagger.jar", "generate", "-l", "java", "-i", "$buildDir\\generated\\strava-api-definition\\api.json", "-o", "${project.getRootDir()}\\src-api"
 }
 
-bootRun.dependsOn(['build'])
+//bootRun.dependsOn(['build'])
 build.dependsOn(['openApiGenerate', 'runSwaggerCodeGen'])
 tasks.openApiGenerate.dependsOn('generateOpenApiDocs')
 //coverageLimit.dependsOn(['jacocoTestReport'])

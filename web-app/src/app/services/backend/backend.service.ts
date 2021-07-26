@@ -8,7 +8,7 @@ export class BackendService {
   constructor(private _http: HttpClient) {
   }
 
-  baseUrl = window.location.protocol + '//' + window.location.hostname + ':6001/'
+  baseUrl = window.location.protocol + '//' + window.location.hostname + ':8080/'
 
   getToken(code: string) {
     let url = this.baseUrl + 'exchangeToken?code=' + code;
