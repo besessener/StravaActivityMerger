@@ -14,6 +14,8 @@ You can select multiple rows/activities with the checkboxes at the left side. Wh
 
 image::docs/merge.gif[]
 
+It is deployed to Google Cloud and can be accessed over http://activity-merger.ddns.net
+
 = Setup
 
 == Get Strava API specification
