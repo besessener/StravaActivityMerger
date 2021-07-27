@@ -53,8 +53,8 @@ class ActivityHandler {
         [status: 'OK']
     }
 
-    ArrayList<StreamData> createStreamDataMap(StreamsApi streamsApi, HashMap<String, Integer> mergeItems) {
-        ArrayList<StreamData> data = []
+    HashMap<String, ArrayList<StreamData>> createStreamDataMap(StreamsApi streamsApi, HashMap<String, Integer> mergeItems) {
+        HashMap<String, ArrayList<StreamData>> streamDataMap = [:]
         mergeItems.each { activityId, startTime ->
             StreamSet streamSet = streamsApi.getActivityStreams(activityId as long, ['latlng', 'altitude', 'time'], true)
 
@@ -62,6 +62,7 @@ class ActivityHandler {
             def latLong = streamSet.getLatlng().getData()
             def times = streamSet.getTime().getData()
 
+            ArrayList<StreamData> data = []
             for (int i = 0; i < times.size(); i++) {
                 StreamData streamData = new StreamData()
                 streamData.id = activityId as long
@@ -72,14 +73,16 @@ class ActivityHandler {
                 streamData.longitude = latLong[i][1]
                 data << streamData
             }
+
+            streamDataMap[activityId] = data.sort { it.time }
         }
 
-        return data.sort { it.time }
+        return streamDataMap
     }
 
-    String createGpx(ArrayList<StreamData> streamData, String typeName) {
+    String createGpx(HashMap<String, ArrayList<StreamData>> streamData, String typeName) {
         int convertedType = getConvertedType(typeName)
-        String startTime = calcTime(0, streamData.isEmpty() ? 0 : streamData.sort{it.startTime}[0].startTime)
+        String startTime = calcTime(0, streamData.isEmpty() ? 0 : streamData.collect{it.getValue()}.flatten().sort{it.startTime}[0].startTime)
 
         def stringWriter = new StringWriter()
         def gpxBuilder = new MarkupBuilder(stringWriter)
@@ -92,11 +95,13 @@ class ActivityHandler {
             trk() {
                 name(NEW_ACTIVITY_NAME)
                 type(convertedType)
-                trkseg() {
-                    for (def item : streamData) {
-                        trkpt(lat: item.latitude, lon: item.longitude) {
-                            ele(item.altitude)
-                            time(calcTime(item.time, item.startTime))
+                for (def entry: streamData) {
+                    trkseg() {
+                        for (def item : entry.getValue()) {
+                            trkpt(lat: item.latitude, lon: item.longitude) {
+                                ele(item.altitude)
+                                time(calcTime(item.time, item.startTime))
+                            }
                         }
                     }
                 }

@@ -54,7 +54,7 @@ class ActivityHandlerTest extends Specification {
 
     def "test get stream data from list of ids with empty input"() {
         expect:
-            activityHandler.createStreamDataMap(new StreamsApi(), [:]) == []
+            activityHandler.createStreamDataMap(new StreamsApi(), [:]) == [:] as HashMap<String, ArrayList<ActivityHandler.StreamData>>
     }
 
     def "get streams with mocked streamset but return data"() {
@@ -85,18 +85,19 @@ class ActivityHandlerTest extends Specification {
             def result = activityHandler.createStreamDataMap(streamsApi, ['123': 0])
 
         then:
-            result.size() == 2
-            result[0].startTime == 0
-            result[0].id == 123
-            result[1].id == 123 // to stream entries for one id
-            result[0].time == 1
-            result[1].time == 3
-            result[0].latitude == 12.0 as float
-            result[1].latitude == 13.1 as float
-            result[0].longitude == 9.5 as float
-            result[1].longitude == 9.5 as float
-            result[0].altitude == 90.5 as float
-            result[1].altitude == 90.6 as float
+            result.size() == 1
+            result.get('123').size() == 2
+            result.get('123')[0].startTime == 0
+            result.get('123')[0].id == 123
+            result.get('123')[1].id == 123 // to stream entries for one id
+            result.get('123')[0].time == 1
+            result.get('123')[1].time == 3
+            result.get('123')[0].latitude == 12.0 as float
+            result.get('123')[1].latitude == 13.1 as float
+            result.get('123')[0].longitude == 9.5 as float
+            result.get('123')[1].longitude == 9.5 as float
+            result.get('123')[0].altitude == 90.5 as float
+            result.get('123')[1].altitude == 90.6 as float
     }
 
     def "test gpx creation"() {
