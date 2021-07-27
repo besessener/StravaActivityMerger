@@ -151,7 +151,7 @@ export class ActivityTableComponent {
     if (element == this.expandedElement) {
       this.imageUrls[element.id] = "https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&key=" + this.key + "&path=enc:" + element.map.summaryPolyline;
     }
-    console.log(this.imageUrls[element.id])
+
     return this.imageUrls[element.id] != undefined ? this.imageUrls[element.id] : "assets/images/staticmap.png";
   }
 }
