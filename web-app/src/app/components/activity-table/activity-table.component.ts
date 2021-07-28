@@ -153,11 +153,13 @@ export class ActivityTableComponent {
   }
 
   getImageUrl(element: any) {
-    if (element == this.expandedElement) {
-      this.imageUrls[element.id] = "https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&key=" + this.key + "&path=enc:" + element.map.summaryPolyline;
-    }
-
-    return this.imageUrls[element.id] != undefined ? this.imageUrls[element.id] : "assets/images/staticmap.png";
+    //  This is got as soon as API calls get too many, as long as 100k calls are no problem in a month always load images
+    // if (element == this.expandedElement) {
+    //   this.imageUrls[element.id] = "https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&key=" + this.key + "&path=enc:" + element.map.summaryPolyline;
+    // }
+    //
+    // return this.imageUrls[element.id] != undefined ? this.imageUrls[element.id] : "assets/images/staticmap.png";
+    return "https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&key=" + this.key + "&path=enc:" + element.map.summaryPolyline;
   }
 
   exportKomoot(element: any) {
