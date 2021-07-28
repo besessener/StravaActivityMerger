@@ -1,6 +1,5 @@
 package me.strava.activitymerger.api
 
-
 import me.strava.activitymerger.handler.ActivityHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ByteArrayResource
@@ -8,15 +7,9 @@ import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
 
 @RestController()
 class ActivityApi extends BaseApiClient {

@@ -8,7 +8,6 @@ import io.swagger.client.api.UploadsApi
 import io.swagger.client.model.*
 import me.strava.activitymerger.WebService
 import org.spockframework.spring.SpringBean
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
 
