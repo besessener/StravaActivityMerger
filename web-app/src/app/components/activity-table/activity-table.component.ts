@@ -24,6 +24,7 @@ export class ActivityTableComponent {
   dataSource: any[] = [];
   imageUrls: any = {};
   columnsToDisplay = ['select', 'id', 'type', 'name', 'date', 'elapsedTime'];
+  token: string | null = ''
 
   expandedElement: Activity | null = null;
   key: string = '';
@@ -40,6 +41,7 @@ export class ActivityTableComponent {
   }
 
   setActivities(value: any[]) {
+    this.token = localStorage.getItem('token');
     this.dataSource = value;
     this.dataSource.forEach(item => {
       item['date'] = item['startDateLocal']['year'] + '-' + item['startDateLocal']['month'] + '-' + item['startDateLocal']['dayOfMonth'];
@@ -100,15 +102,18 @@ export class ActivityTableComponent {
       });
   }
 
-  constructor(private backendService: BackendService, private activitiesRetriever: ActivitiesRetrieverService, private _router: Router) {
-    backendService.getApiKey().subscribe((data: any) => {
+  constructor(public backendService: BackendService, private activitiesRetriever: ActivitiesRetrieverService, private _router: Router) {
+    this.init();
+  }
+
+  init() {
+    this.backendService.getApiKey().subscribe((data: any) => {
       this.key = data.key;
     })
   }
 
   mergeButtonClicked() {
     this.loading = true;
-    let token = localStorage.getItem('token');
 
     let mergeItems: any = {};
     this.selection.selected.forEach(activity => {
@@ -116,7 +121,7 @@ export class ActivityTableComponent {
     })
 
     let activityDataToPost = {
-      token: token,
+      token: this.token,
       mergeItems: mergeItems,
       type: this.selection.selected[0].type,
     };
@@ -153,6 +158,10 @@ export class ActivityTableComponent {
     }
 
     return this.imageUrls[element.id] != undefined ? this.imageUrls[element.id] : "assets/images/staticmap.png";
+  }
+
+  exportKomoot(element: any) {
+    this.backendService.getGpx(this.token, element.id, element.name, element.type, element.timeInSeconds);
   }
 }
 

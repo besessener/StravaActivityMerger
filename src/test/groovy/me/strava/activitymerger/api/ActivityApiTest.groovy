@@ -7,7 +7,9 @@ import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.test.web.servlet.MockMvc
 import spock.lang.Specification
 
@@ -85,5 +87,40 @@ class ActivityApiTest extends Specification {
 
         then:
             '' == res
+    }
+
+    def "/downloadGpx : is accessible but fails due to missing params"() {
+        given:
+            activityHandler.getGpxFile(_, _, _, _, _) >> File.createTempFile('some_test_prefix', '.tmp')
+
+        when:
+            def res = mvc.perform(get('/downloadGpx'))
+                    .andExpect(status().isBadRequest())
+                    .andReturn()
+                    .response
+
+        then:
+            res.getContentAsString() == ''
+    }
+
+    def "/downloadGpx : is accessible and returns a file"() {
+        given:
+            def file = File.createTempFile('some_test_prefix', '.tmp')
+            file.write('some content')
+            activityHandler.getGpxFile(_, _, _, _, _) >> file
+
+        when:
+            def res = mvc.perform(get('/downloadGpx')
+                    .param('token', '123')
+                    .param('name', 'myName')
+                    .param('type', 'RIDE')
+                    .param('id', '1')
+                    .param('time', '0'))
+                    .andExpect(status().isOk())
+                    .andReturn()
+                    .response
+
+        then:
+            res.getContentAsString() == 'some content'
     }
 }

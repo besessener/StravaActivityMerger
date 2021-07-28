@@ -29,4 +29,8 @@ export class BackendService {
     let url = this.baseUrl + 'merge';
     return this._http.post(url, activityDataToPost)
   }
+
+  getGpx(token: string | null, id: string,name: string, type: string, time: number) {
+    window.open(this.baseUrl + 'downloadGpx?token=' + token + '&id=' + id + '&time=' + time + '&name=' + name + '&type=' + type, '_blank');
+  }
 }

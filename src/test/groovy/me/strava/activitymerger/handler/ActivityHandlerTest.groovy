@@ -7,6 +7,7 @@ import io.swagger.client.api.StreamsApi
 import io.swagger.client.api.UploadsApi
 import io.swagger.client.model.*
 import me.strava.activitymerger.WebService
+import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
@@ -14,8 +15,8 @@ import spock.lang.Specification
 @SpringBootTest(classes = WebService.class)
 class ActivityHandlerTest extends Specification {
 
-    @Autowired
-    ActivityHandler activityHandler
+    @SpringBean
+    ActivityHandler activityHandler = Spy()
 
     def "getActivities : retry on exception"() {
         given:
@@ -167,5 +168,35 @@ class ActivityHandlerTest extends Specification {
             1 * api.createUpload(_, 'New Merged Activity', '', '', '', 'gpx', _) >> { upload }
             1 * actApi.getLoggedInAthleteActivities(_, 0, 1, 30) >> { throw new ApiException() }
             2 * actApi.getLoggedInAthleteActivities(_, 0, 1, 30) >> new ArrayList<SummaryActivity>()
+    }
+
+    def "test single gpx file creation for export"() {
+        given:
+            ApiClient apiClient = new ApiClient()
+            HashMap<String, ArrayList<ActivityHandler.StreamData>> mockedData = new HashMap<String, ArrayList<ActivityHandler.StreamData>>()
+            ActivityHandler.StreamData stream = new ActivityHandler.StreamData(activityHandler)
+            mockedData['123'] = [stream]
+
+        when:
+            File file = activityHandler.getGpxFile(apiClient, '123', 'name', 'RIDE', 0)
+
+        then:
+            1 * activityHandler.createStreamDataMap(_, _) >> { return mockedData }
+            '''<?xml version='1.0' encoding='utf-8'?>
+<gpx>
+  <metadata>
+    <time>1970-01-01T00:00:00Z</time>
+  </metadata>
+  <trk>
+    <name>name</name>
+    <type>1</type>
+    <trkseg>
+      <trkpt lat='0.0' lon='0.0'>
+        <ele>0.0</ele>
+        <time>1970-01-01T00:00:00Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>''' == file.text
     }
 }

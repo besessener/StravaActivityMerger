@@ -80,7 +80,7 @@ class ActivityHandler {
         return streamDataMap
     }
 
-    String createGpx(HashMap<String, ArrayList<StreamData>> streamData, String typeName) {
+    String createGpx(HashMap<String, ArrayList<StreamData>> streamData, String typeName, String activityName = NEW_ACTIVITY_NAME) {
         int convertedType = getConvertedType(typeName)
         String startTime = calcTime(0, streamData.isEmpty() ? 0 : streamData.collect{it.getValue()}.flatten().sort{it.startTime}[0].startTime)
 
@@ -93,7 +93,7 @@ class ActivityHandler {
                 time(startTime)
             }
             trk() {
-                name(NEW_ACTIVITY_NAME)
+                name(activityName)
                 type(convertedType)
                 for (def entry: streamData) {
                     trkseg() {
@@ -166,5 +166,15 @@ class ActivityHandler {
         } catch (ApiException e) {
             println e.responseBody
         }
+    }
+
+    File getGpxFile(ApiClient apiClient, String id, String name, String type, Integer time) {
+        def mergeItems = new HashMap<String, Integer>()
+        mergeItems[id] = time
+        def values = createStreamDataMap(new StreamsApi(apiClient), mergeItems)
+        def gpx = createGpx(values, type, name)
+        def file = File.createTempFile('gpx_file_to_download_', '.gpx')
+        file.write(gpx)
+        file
     }
 }

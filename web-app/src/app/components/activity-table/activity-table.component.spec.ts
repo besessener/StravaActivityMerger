@@ -7,7 +7,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {RouterModule} from "@angular/router";
 import {LoadComponent} from "./load/load.component";
 import {BackendService} from "../../services/backend/backend.service";
-import {of} from "rxjs";
+import {of, Subject} from "rxjs";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 describe('ActivityTableComponent', () => {
@@ -36,9 +36,15 @@ describe('ActivityTableComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create', fakeAsync(() => {
     expect(component).toBeTruthy();
-  });
+    let response = new Subject<any>();
+    spyOn(backendService, "getApiKey").and.returnValue(response)
+    component.init();
+    response.next({key: 'api'});
+    tick(1);
+    expect(component.key).toEqual('api');
+  }));
 
   it('should convert distances', () => {
     expect(component.meterToKilometer('123')).toEqual('123 m');
@@ -97,8 +103,22 @@ describe('ActivityTableComponent', () => {
   })
 
   it('merge button click does not fail', fakeAsync(() => {
-    let data1: Activity = {id: 1, type: 'ride', name: 'afternoon ride', date: '1-July-2021', elapsedTime: '10 seconds', timeInSeconds: 0};
-    let data2: Activity = {id: 2, type: 'canoeing', name: 'canoeing', date: '2-July-2021', elapsedTime: '1 hour', timeInSeconds: 0};
+    let data1: Activity = {
+      id: 1,
+      type: 'ride',
+      name: 'afternoon ride',
+      date: '1-July-2021',
+      elapsedTime: '10 seconds',
+      timeInSeconds: 0
+    };
+    let data2: Activity = {
+      id: 2,
+      type: 'canoeing',
+      name: 'canoeing',
+      date: '2-July-2021',
+      elapsedTime: '1 hour',
+      timeInSeconds: 0
+    };
     component.selection.selected.push(data1);
     component.selection.selected.push(data2);
     spyOn(backendService, "mergeActivities")
@@ -106,7 +126,7 @@ describe('ActivityTableComponent', () => {
       .and.returnValue(of(''));
 
     component.loading = true;
-    localStorage.setItem('token', '123');
+    component.token = '123';
     expect(component.loading).toBeTrue();
 
     component.mergeButtonClicked();
@@ -131,4 +151,19 @@ describe('ActivityTableComponent', () => {
     let element2: any = {id: 1, map: {summaryPolyline: 'schnulliwutz'}}
     expect(component.getImageUrl(element2)).toEqual('assets/images/staticmap.png');
   })
+
+  it('export function shall call backup service and then open link in new tab', () => {
+    spyOn(window, "open").and.callFake(() => null);
+    component.exportKomoot('123');
+
+    expect(window.open).toHaveBeenCalled();
+  })
+
+  it('waitForDom', fakeAsync(() => {
+    expect(component.allElementsLoaded).toBeFalse();
+    component.numberOfRows = 0;
+    component.waitForDom();
+    tick(5000);
+    expect(component.allElementsLoaded).toBeTrue();
+  }))
 });
