@@ -77,8 +77,14 @@
     </tr>
     <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
   </table>
-  <div class="merge-button-container">
-    <button mat-flat-button color="accent" [disabled]="selection.selected.length < 2" (click)="mergeButtonClicked()">Merge</button>
+  <div class="merge-button-container" style="font-size: 12px">
+    <form [formGroup]="checkoutForm" (ngSubmit)="mergeButtonClicked()" style="height: 100%">
+      <mat-form-field appearance="legacy" style="height: 100%; padding: 5px;">
+  <!--      <mat-label>NEW MERGED ACTIVITY</mat-label>-->
+        <input matInput placeholder="Activity Name" id="name" type="text" formControlName="name">
+      </mat-form-field>
+      <button mat-flat-button color="accent" [disabled]="selection.selected.length < 2">Merge</button>
+    </form>
   </div>
 </div>
 <load-component *ngIf="this.loading">Loading</load-component>

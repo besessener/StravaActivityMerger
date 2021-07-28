@@ -11,6 +11,9 @@ import {LoadComponent} from "./components/activity-table/load/load.component";
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('AppComponent', () => {
   let activitiesRetrieverService: ActivitiesRetrieverService;
@@ -24,7 +27,10 @@ describe('AppComponent', () => {
         RouterModule.forRoot([]),
         MatTableModule,
         MatCheckboxModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        ReactiveFormsModule,
+        NoopAnimationsModule,
+        MatInputModule
       ],
       declarations: [
         AppComponent,

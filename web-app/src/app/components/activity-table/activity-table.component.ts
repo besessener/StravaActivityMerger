@@ -4,6 +4,7 @@ import {BackendService} from "../../services/backend/backend.service";
 import {SelectionModel} from "@angular/cdk/collections";
 import {Router} from "@angular/router";
 import {ActivitiesRetrieverService} from "../../services/activities-retriever/activities-retriever.service";
+import {FormBuilder} from "@angular/forms";
 
 /**
  * @title Table with expandable rows
@@ -25,6 +26,9 @@ export class ActivityTableComponent {
   imageUrls: any = {};
   columnsToDisplay = ['select', 'id', 'type', 'name', 'date', 'elapsedTime'];
   token: string | null = ''
+  checkoutForm = this.formBuilder.group({
+    name: ''
+  })
 
   expandedElement: Activity | null = null;
   key: string = '';
@@ -102,7 +106,7 @@ export class ActivityTableComponent {
       });
   }
 
-  constructor(public backendService: BackendService, private activitiesRetriever: ActivitiesRetrieverService, private _router: Router) {
+  constructor(private formBuilder: FormBuilder, public backendService: BackendService, private activitiesRetriever: ActivitiesRetrieverService, private _router: Router) {
     this.init();
   }
 
@@ -122,10 +126,11 @@ export class ActivityTableComponent {
 
     let activityDataToPost = {
       token: this.token,
+      name: this.checkoutForm.value.name,
       mergeItems: mergeItems,
       type: this.selection.selected[0].type,
     };
-
+    console.log(this.checkoutForm.value)
     this.backendService.mergeActivities(activityDataToPost).subscribe(() => {
       this.selection = new SelectionModel<Activity>(true, []);
       this._router.navigate(['/'], { queryParams: {refresh: Math.random()} });

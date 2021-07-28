@@ -58,7 +58,7 @@ class ActivityApiTest extends Specification {
     def "/merge : is accessible and successful"() {
         given:
             def mergeItems = ['5': 1, '3': 0, '99': 2]
-            activityHandler.mergeActivities(_, mergeItems, 'ride') >> '5438958345NewId'
+            activityHandler.mergeActivities(_, _, mergeItems, 'ride') >> '5438958345NewId'
             def mergeItemsAsJsonString = JsonOutput.prettyPrint(JsonOutput.toJson([token: '123', mergeItems: mergeItems, type: 'ride']))
 
         when:

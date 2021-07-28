@@ -45,10 +45,10 @@ class ActivityHandler {
         response
     }
 
-    Object mergeActivities(ApiClient apiClient, HashMap<String, Integer> mergeItems, String type) {
+    Object mergeActivities(ApiClient apiClient, String name, HashMap<String, Integer> mergeItems, String type) {
         def values = createStreamDataMap(new StreamsApi(apiClient), mergeItems)
-        def gpx = createGpx(values, type)
-        createNewActivity(new UploadsApi(apiClient), new ActivitiesApi(apiClient), gpx)
+        def gpx = createGpx(values, type, name)
+        createNewActivity(new UploadsApi(apiClient), new ActivitiesApi(apiClient), gpx, name)
         [status: 'OK']
     }
 
@@ -79,7 +79,7 @@ class ActivityHandler {
         return streamDataMap
     }
 
-    String createGpx(HashMap<String, ArrayList<StreamData>> streamData, String typeName, String activityName = NEW_ACTIVITY_NAME) {
+    String createGpx(HashMap<String, ArrayList<StreamData>> streamData, String typeName, String activityName) {
         int convertedType = getConvertedType(typeName)
         String startTime = calcTime(0, streamData.isEmpty() ? 0 : streamData.collect { it.getValue() }.flatten().sort { it.startTime }[0].startTime)
 
@@ -92,10 +92,10 @@ class ActivityHandler {
                 time(startTime)
             }
             trk() {
-                name(activityName)
+                name(activityName ?: NEW_ACTIVITY_NAME)
                 type(convertedType)
-                for (def entry : streamData) {
-                    trkseg() {
+                trkseg() {
+                    for (def entry : streamData) {
                         for (def item : entry.getValue()) {
                             trkpt(lat: item.latitude, lon: item.longitude) {
                                 ele(item.altitude)
@@ -145,12 +145,12 @@ class ActivityHandler {
         instant.plusSeconds(offset).toString()
     }
 
-    def createNewActivity(UploadsApi api, ActivitiesApi activitiesApi, String gpx) {
+    def createNewActivity(UploadsApi api, ActivitiesApi activitiesApi, String gpx, String name) {
         def currentTime = System.currentTimeSeconds().toInteger()
         File tmpFile = File.createTempFile("merged_activity_gpx_${currentTime}_", ".gpx")
         tmpFile.write(gpx)
         try {
-            api.createUpload(tmpFile, NEW_ACTIVITY_NAME, '', '', '', 'gpx', tmpFile.name)
+            api.createUpload(tmpFile, name ?: NEW_ACTIVITY_NAME, '', '', '', 'gpx', tmpFile.name)
             for (def i : (1..3)) {
                 sleep(3 * 1000)
                 try {

@@ -49,7 +49,7 @@ class ActivityHandlerTest extends Specification {
 
     def "merge returns 'OK'"() {
         expect:
-            activityHandler.mergeActivities(new ApiClient(), [:], 'RIDE') == [status: 'OK']
+            activityHandler.mergeActivities(new ApiClient(), '', [:], 'RIDE') == [status: 'OK']
     }
 
     def "test get stream data from list of ids with empty input"() {
@@ -126,12 +126,13 @@ class ActivityHandlerTest extends Specification {
 
         when:
             def result = activityHandler.createStreamDataMap(streamsApi, ['123': 60])
-            def gpx = activityHandler.createGpx(result, 'RIDE')
+            def gpx = activityHandler.createGpx(result, 'RIDE', 'myRide')
             def gpxRoot = new XmlSlurper().parseText(gpx)
 
         then:
             gpx.contains("<?xml version='1.0' encoding='utf-8'?>")
             gpxRoot
+            gpxRoot.trk[0].name == 'myRide'
             gpxRoot.trk.size() == 1
             gpxRoot.trk.trkseg.size() == 1
             gpxRoot.trk.trkseg.trkpt.size() == 2
@@ -161,10 +162,10 @@ class ActivityHandlerTest extends Specification {
             upload.setActivityId(1)
 
         when:
-            activityHandler.createNewActivity(api, actApi, '<gpx />')
+            activityHandler.createNewActivity(api, actApi, '<gpx />', 'myRide')
 
         then:
-            1 * api.createUpload(_, 'New Merged Activity', '', '', '', 'gpx', _) >> { upload }
+            1 * api.createUpload(_, 'myRide', '', '', '', 'gpx', _) >> { upload }
             1 * actApi.getLoggedInAthleteActivities(_, 0, 1, 30) >> { throw new ApiException() }
             2 * actApi.getLoggedInAthleteActivities(_, 0, 1, 30) >> new ArrayList<SummaryActivity>()
     }

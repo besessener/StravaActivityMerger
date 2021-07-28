@@ -51,7 +51,8 @@ class ActivityApi extends BaseApiClient {
             @RequestBody Map<String, Object> body) {
         String token = body.token
         String type = body.type
+        String name = body.name
         HashMap<String, Integer> mergeItems = body.mergeItems as HashMap<String, Integer>
-        return activityHandler.mergeActivities(getApiClient(token), mergeItems, type)
+        return activityHandler.mergeActivities(getApiClient(token), name, mergeItems, type)
     }
 }

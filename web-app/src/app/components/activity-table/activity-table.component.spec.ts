@@ -9,6 +9,9 @@ import {LoadComponent} from "./load/load.component";
 import {BackendService} from "../../services/backend/backend.service";
 import {of, Subject} from "rxjs";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('ActivityTableComponent', () => {
   let component: ActivityTableComponent;
@@ -22,7 +25,10 @@ describe('ActivityTableComponent', () => {
         MatTableModule,
         MatCheckboxModule,
         RouterModule.forRoot([]),
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        ReactiveFormsModule,
+        NoopAnimationsModule,
+        MatInputModule
       ],
       declarations: [ActivityTableComponent, LoadComponent],
     })
@@ -122,7 +128,7 @@ describe('ActivityTableComponent', () => {
     component.selection.selected.push(data1);
     component.selection.selected.push(data2);
     spyOn(backendService, "mergeActivities")
-      .withArgs({token: '123', mergeItems: {'1': 0, '2': 0}, type: 'ride'})
+      .withArgs({token: '123', name: '', mergeItems: {'1': 0, '2': 0}, type: 'ride'})
       .and.returnValue(of(''));
 
     component.loading = true;
