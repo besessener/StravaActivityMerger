@@ -5,14 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" rel="stylesheet">
   <title>Activity Merger - powered by STRAVA</title>
+  <script>
+    function setHomeTextVisible(){
+      if(window.innerWidth < window.innerHeight) {
+        console.log(document.getElementById("home"))
+        document.getElementById("home").hidden = true;
+      } else {
+        document.getElementById("home").hidden = false;
+      }
+    }
+  </script>
 </head>
-<body class="mat-app-background">
+<body class="mat-app-background" onload="setHomeTextVisible()" onresize="setHomeTextVisible()">
   <app-root></app-root>
   <footer class="site-footer">
     <div class="container">
       <div class="row" style="display: flex; justify-content: space-between;">
-        <div class="col-sm-12 col-md-6" style="padding-left: 15px; height: 100%; vertical-align: bottom">
-          <p><br/><a href="/">Activity Merger</a> - by Matthias Eggert.</p>
+        <div id="home" class="col-sm-12 col-md-6" style="padding-left: 15px; height: 100%; vertical-align: bottom">
+          <p><br/><a href="/">Activity Merger</a> - by Matthias Eggert</p>
         </div>
         <div style="padding-top: 5px;">
           <a href="https://www.strava.com/athlete/training" target="_blank"><img src="assets/images/api_logo_pwrdBy_strava_horiz_light.png"></a>
