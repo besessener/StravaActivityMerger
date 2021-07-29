@@ -41,7 +41,7 @@
     <!-- id Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> ID </th>
-      <td mat-cell *matCellDef="let element" class="countable"> {{element.id}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
     </ng-container>
 
     <!-- type Column -->
@@ -53,7 +53,7 @@
     <!-- name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Activity name </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      <td mat-cell *matCellDef="let element" class="countable"> {{element.name}} </td>
     </ng-container>
 
     <!-- date Column -->

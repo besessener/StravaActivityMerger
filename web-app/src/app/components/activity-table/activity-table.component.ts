@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {AfterViewInit, Component, Input} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {BackendService} from "../../services/backend/backend.service";
 import {SelectionModel} from "@angular/cdk/collections";
@@ -21,7 +21,7 @@ import {FormBuilder} from "@angular/forms";
     ]),
   ],
 })
-export class ActivityTableComponent {
+export class ActivityTableComponent implements AfterViewInit{
   dataSource: any[] = [];
   imageUrls: any = {};
   columnsToDisplay = ['select', 'id', 'type', 'name', 'date', 'elapsedTime'];
@@ -169,6 +169,14 @@ export class ActivityTableComponent {
 
   exportKomoot(element: any) {
     this.backendService.getGpx(this.token, element.id, element.name, element.type, element.timeInSeconds);
+  }
+
+  isLandscapeMode() {
+    return window.innerHeight < window.innerWidth;
+  }
+
+  ngAfterViewInit(): void {
+    if (!this.isLandscapeMode()) this.columnsToDisplay.splice(1, 2);
   }
 }
 

@@ -1,6 +1,7 @@
 table {
   //width: 90vw;
   max-width: 1000px;
+  width: content-box;
   margin: auto;
 }
 
@@ -24,8 +25,8 @@ tr.element-row:not(.expanded-row):active {
 
 .element-row td {
   border-bottom-width: 0;
-  padding-left: 1%;
-  padding-right: 1%;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 .element-detail {
@@ -55,8 +56,8 @@ tr.header {
 }
 
 tr.header th {
-  padding-left: 1%;
-  padding-right: 1%;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 .merge-button-container {
