@@ -1,7 +1,8 @@
 <div class="container">
   <table mat-table
          [dataSource]="dataSource" multiTemplateDataRows
-         class="mat-elevation-z8">
+         class="mat-elevation-z8"
+          [style.width]="this.isLandscapeMode() ? '1000px' : 'content-box'">
 
     <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
     <ng-container matColumnDef="expandedDetail">
