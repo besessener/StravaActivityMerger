@@ -81,7 +81,8 @@ class ActivityHandler {
 
     String createGpx(HashMap<String, ArrayList<StreamData>> streamData, String typeName, String activityName) {
         int convertedType = getConvertedType(typeName)
-        String startTime = calcTime(0, streamData.isEmpty() ? 0 : streamData.collect { it.getValue() }.flatten().sort { it.startTime }[0].startTime)
+        ArrayList<StreamData> flatStream = streamData.collect { it.getValue() }.flatten().sort { it.startTime }
+        String startTime = calcTime(0, streamData.isEmpty() ? 0 : flatStream[0].startTime)
 
         def stringWriter = new StringWriter()
         def gpxBuilder = new MarkupBuilder(stringWriter)
@@ -95,12 +96,10 @@ class ActivityHandler {
                 name(activityName ?: NEW_ACTIVITY_NAME)
                 type(convertedType)
                 trkseg() {
-                    for (def entry : streamData) {
-                        for (def item : entry.getValue()) {
-                            trkpt(lat: item.latitude, lon: item.longitude) {
-                                ele(item.altitude)
-                                time(calcTime(item.time, item.startTime))
-                            }
+                    for (def item : flatStream) {
+                        trkpt(lat: item.latitude, lon: item.longitude) {
+                            ele(item.altitude)
+                            time(calcTime(item.time, item.startTime))
                         }
                     }
                 }
