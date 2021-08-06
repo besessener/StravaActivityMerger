@@ -12,6 +12,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {AppComponent} from "../../app.component";
 
 describe('ActivityTableComponent', () => {
   let component: ActivityTableComponent;
@@ -174,4 +175,23 @@ describe('ActivityTableComponent', () => {
     tick(5000);
     expect(component.allElementsLoaded).toBeTrue();
   }))
+
+  it('shall be in landscape mode if width > height', () => {
+    spyOnProperty(window, 'innerWidth').and.returnValue(20);
+    spyOnProperty(window, 'innerHeight').and.returnValue(10);
+    window.dispatchEvent(new Event('resize'));
+    component.ngAfterViewInit();
+
+    expect(component.isLandscapeMode()).toBeTrue();
+  })
+
+  it('shall be in portrait mode if width < height', () => {
+    spyOnProperty(window, 'innerWidth').and.returnValue(10);
+    spyOnProperty(window, 'innerHeight').and.returnValue(20);
+    window.dispatchEvent(new Event('resize'));
+    component.ngAfterViewInit();
+
+    expect(component.isLandscapeMode()).toBeFalse();
+  })
+
 });

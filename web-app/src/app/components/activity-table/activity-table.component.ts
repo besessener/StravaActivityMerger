@@ -130,7 +130,7 @@ export class ActivityTableComponent implements AfterViewInit{
       mergeItems: mergeItems,
       type: this.selection.selected[0].type,
     };
-    console.log(this.checkoutForm.value)
+
     this.backendService.mergeActivities(activityDataToPost).subscribe(() => {
       this.selection = new SelectionModel<Activity>(true, []);
       this._router.navigate(['/'], { queryParams: {refresh: Math.random()} });

@@ -155,4 +155,26 @@ describe('AppComponent', () => {
     app.codeAvailable = true;
     expect(app.getVisibleComponent()).toEqual('activity-table');
   })
+
+  it('shall show home if active', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.isHomeHidden).toBeFalse();
+
+    spyOnProperty(window, 'innerWidth').and.returnValue(10);
+    spyOnProperty(window, 'innerHeight').and.returnValue(20);
+    window.dispatchEvent(new Event('resize'));
+    expect(app.isHomeHidden).toBeTrue();
+  })
+
+  it('shall hide home if inactive', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.isHomeHidden).toBeFalse();
+
+    spyOnProperty(window, 'innerWidth').and.returnValue(20);
+    spyOnProperty(window, 'innerHeight').and.returnValue(10);
+    window.dispatchEvent(new Event('resize'));
+    expect(app.isHomeHidden).toBeFalse();
+  })
 });
