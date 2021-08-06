@@ -10,14 +10,22 @@ import {ActivitiesRetrieverService} from "./services/activities-retriever/activi
 export class AppComponent implements OnInit {
   title = 'Activity Merger';
 
-  loadedToken: string| null = '';
+  loadedToken: string | null = '';
   tokenAvailable: boolean = false;
   codeAvailable: boolean = false;
+  isHomeHidden: boolean = false;
   auth: boolean = false;
 
   activities: any = [];
 
-  constructor(public route: ActivatedRoute, public activitiesRetrieverService: ActivitiesRetrieverService, private _router: Router) {
+  constructor(
+    public route: ActivatedRoute,
+    public activitiesRetrieverService: ActivitiesRetrieverService,
+    private _router: Router) {
+    window.onresize = (e) =>
+    {
+      this.setHomeTextVisible();
+    };
   }
 
   ngOnInit(): void {
@@ -42,6 +50,8 @@ export class AppComponent implements OnInit {
     if (this.loadedToken) {
       this.activitiesRetrieverService.token.next(this.loadedToken);
     }
+
+    this.setHomeTextVisible();
   }
 
   private onQueryParamChanged(params: Params) {
@@ -51,10 +61,10 @@ export class AppComponent implements OnInit {
         this.activitiesRetrieverService.setTokenFromCode(params.code);
         this._router.navigate(['/'], {queryParams: {auth: true}});
       }
-    } else if (params.refresh){
+    } else if (params.refresh) {
       let token = localStorage.getItem('token');
       this.activitiesRetrieverService.setActivitiesWithToken(token ? token : '')
-    } else if(params.auth) {
+    } else if (params.auth) {
       this.auth = true;
     } else {
       this.codeAvailable = false;
@@ -80,5 +90,13 @@ export class AppComponent implements OnInit {
     }
 
     return 'login';
+  }
+
+  public setHomeTextVisible() {
+    if (window.innerWidth < window.innerHeight) {
+      this.isHomeHidden = true;
+    } else {
+      this.isHomeHidden = false;
+    }
   }
 }

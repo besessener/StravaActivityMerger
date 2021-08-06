@@ -1,2 +1,14 @@
 <activity-table-component *ngIf="getVisibleComponent() == 'activity-table'" [activities]="this.activities">Loading</activity-table-component>
 <login-component *ngIf="getVisibleComponent() == 'login'">Loading</login-component>
+<footer class="site-footer">
+  <div class="container">
+    <div class="row" style="display: flex; justify-content: space-between;">
+      <div class="col-sm-12 col-md-6" style="padding-left: 15px; height: 100%; vertical-align: bottom">
+        <p id="home" *ngIf="!isHomeHidden" (window:resize)="setHomeTextVisible()"><br/><a href="/">Activity Merger</a> - by Matthias Eggert</p>
+      </div>
+      <div style="padding-top: 5px;">
+        <a href="https://www.strava.com/athlete/training" target="_blank"><img src="assets/images/api_logo_pwrdBy_strava_horiz_light.png"></a>
+      </div>
+    </div>
+  </div>
+</footer>
