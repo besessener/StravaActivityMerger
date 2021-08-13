@@ -10,18 +10,9 @@ import {ActivitiesRetrieverService} from "./services/activities-retriever/activi
 export class AppComponent implements OnInit {
   title = 'Activity Merger';
 
-  loadedToken: string | null = '';
-  tokenAvailable: boolean = false;
-  codeAvailable: boolean = false;
   isHomeHidden: boolean = false;
-  auth: boolean = false;
 
-  activities: any = [];
-
-  constructor(
-    public route: ActivatedRoute,
-    public activitiesRetrieverService: ActivitiesRetrieverService,
-    private _router: Router) {
+  constructor(private _router: Router) {
     window.onresize = (e) =>
     {
       this.setHomeTextVisible();
@@ -29,67 +20,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadedToken = localStorage.getItem('token')
-    this.tokenAvailable = this.loadedToken != null && this.loadedToken != ''
-
-    this.activitiesRetrieverService.activities.subscribe(activities => {
-      this.setActivityData(activities);
-    })
-
-    this.activitiesRetrieverService.token.subscribe(token => {
-      if (token) {
-        localStorage.setItem('token', token);
-        this.activitiesRetrieverService.setActivitiesWithToken(token);
-      }
-    })
-
-    this.route.queryParams.subscribe((params: Params) => {
-      this.onQueryParamChanged(params)
-    });
-
-    if (this.loadedToken) {
-      this.activitiesRetrieverService.token.next(this.loadedToken);
-    }
-
     this.setHomeTextVisible();
-  }
-
-  private onQueryParamChanged(params: Params) {
-    if (params.code) {
-      this.codeAvailable = true;
-      if (!this.loadedToken) {
-        this.activitiesRetrieverService.setTokenFromCode(params.code);
-        this._router.navigate(['/'], {queryParams: {auth: true}});
-      }
-    } else if (params.refresh) {
-      let token = localStorage.getItem('token');
-      this.activitiesRetrieverService.setActivitiesWithToken(token ? token : '')
-    } else if (params.auth) {
-      this.auth = true;
-    } else {
-      this.codeAvailable = false;
-      this.auth = false;
-    }
-  }
-
-  private setActivityData<T>(activities: T) {
-    this.activities = activities;
-    if (this.activities.message) {
-      localStorage.clear();
-      this._router.navigate(['/'], {queryParams: {error: encodeURIComponent(this.activities.message)}});
-      this.tokenAvailable = false;
-      this.codeAvailable = false;
-    } else if (this.activities.length > 0) {
-      this.tokenAvailable = true;
-    }
-  }
-
-  public getVisibleComponent() {
-    if (this.tokenAvailable || this.codeAvailable || this.auth) {
-      return 'activity-table';
-    }
-
-    return 'login';
   }
 
   public setHomeTextVisible() {

@@ -4,28 +4,36 @@ import {Activity, ActivityTableComponent} from './activity-table.component';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import {RouterModule} from "@angular/router";
+import {Router, RouterModule, Routes} from "@angular/router";
 import {LoadComponent} from "./load/load.component";
 import {BackendService} from "../../services/backend/backend.service";
-import {of, Subject} from "rxjs";
+import {BehaviorSubject, of, Subject} from "rxjs";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 import {AppComponent} from "../../app.component";
+import {LoginComponent} from "../login/login.component";
 
 describe('ActivityTableComponent', () => {
   let component: ActivityTableComponent;
   let fixture: ComponentFixture<ActivityTableComponent>;
   let backendService: BackendService;
+  let router: Router;
 
   beforeEach(async () => {
+    const routes: Routes = [
+      {path: 'login', component: LoginComponent},
+      {path: '**', component: ActivityTableComponent},
+      {path: 'activities', component: ActivityTableComponent}
+    ];
+
     await TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
         MatTableModule,
         MatCheckboxModule,
-        RouterModule.forRoot([]),
+        RouterModule.forRoot(routes),
         MatProgressSpinnerModule,
         ReactiveFormsModule,
         NoopAnimationsModule,
@@ -35,6 +43,7 @@ describe('ActivityTableComponent', () => {
     })
       .compileComponents();
     backendService = TestBed.inject(BackendService);
+    router = TestBed.inject(Router);
   });
 
   beforeEach(() => {
@@ -51,6 +60,15 @@ describe('ActivityTableComponent', () => {
     response.next({key: 'api'});
     tick(1);
     expect(component.key).toEqual('api');
+  }));
+
+  it('goto login on error', fakeAsync(() => {
+    expect(component).toBeTruthy();
+    let response = new Subject<any>();
+    localStorage.setItem('anything', 'foobar');
+    component.activitiesRetriever.activities.next({message: 'error'});
+    tick(1);
+    expect(localStorage.getItem('anything')).toEqual(null);
   }));
 
   it('should convert distances', () => {
@@ -136,6 +154,41 @@ describe('ActivityTableComponent', () => {
     component.token = '123';
     expect(component.loading).toBeTrue();
 
+    localStorage.clear();
+    component.mergeButtonClicked();
+    component.allElementsLoaded = true;
+    tick(1000);
+    expect(component.loading).toBeFalse();
+  }))
+
+  it('merge button click does not fail, with token set', fakeAsync(() => {
+    let data1: Activity = {
+      id: 1,
+      type: 'ride',
+      name: 'afternoon ride',
+      date: '1-July-2021',
+      elapsedTime: '10 seconds',
+      timeInSeconds: 0
+    };
+    let data2: Activity = {
+      id: 2,
+      type: 'canoeing',
+      name: 'canoeing',
+      date: '2-July-2021',
+      elapsedTime: '1 hour',
+      timeInSeconds: 0
+    };
+    component.selection.selected.push(data1);
+    component.selection.selected.push(data2);
+    spyOn(backendService, "mergeActivities")
+      .withArgs({token: '123', name: '', mergeItems: {'1': 0, '2': 0}, type: 'ride'})
+      .and.returnValue(of(''));
+
+    component.loading = true;
+    component.token = '123';
+    expect(component.loading).toBeTrue();
+
+    localStorage.setItem('token', '123');
     component.mergeButtonClicked();
     component.allElementsLoaded = true;
     tick(1000);
@@ -161,7 +214,7 @@ describe('ActivityTableComponent', () => {
     // expect(component.getImageUrl(element2)).toEqual('assets/images/staticmap.png');
   })
 
-  it('export function shall call backup service and then open link in new tab', () => {
+  it('export function shall call backend service and then open link in new tab', () => {
     spyOn(window, "open").and.callFake(() => null);
     component.exportKomoot('123');
 
@@ -176,6 +229,13 @@ describe('ActivityTableComponent', () => {
     expect(component.allElementsLoaded).toBeTrue();
   }))
 
+  it('activities retreiver if token then set it', fakeAsync(() => {
+    let spy = spyOn(component.activitiesRetriever, 'setActivitiesWithToken').withArgs('123').and.callThrough();
+    component.activitiesRetriever.token.next('123');
+    tick(1);
+    expect(spy).toHaveBeenCalled();
+  }))
+
   it('shall be in landscape mode if width > height', () => {
     spyOnProperty(window, 'innerWidth').and.returnValue(20);
     spyOnProperty(window, 'innerHeight').and.returnValue(10);
@@ -183,6 +243,13 @@ describe('ActivityTableComponent', () => {
     component.ngAfterViewInit();
 
     expect(component.isLandscapeMode()).toBeTrue();
+  })
+
+  it('constructor with code', () => {
+    spyOn(component.route.snapshot.queryParamMap, 'get').withArgs('code').and.returnValue('123');
+    let spy = spyOn(component.activitiesRetriever, 'setTokenFromCode').withArgs('123').and.callThrough();
+    new ActivityTableComponent(new FormBuilder(), component.backendService, component.activitiesRetriever, router, component.route);
+    expect(spy).toHaveBeenCalled();
   })
 
   it('shall be in portrait mode if width < height', () => {
@@ -193,5 +260,4 @@ describe('ActivityTableComponent', () => {
 
     expect(component.isLandscapeMode()).toBeFalse();
   })
-
 });

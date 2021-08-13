@@ -10,9 +10,11 @@ tr.detail-row {
 }
 
 tr.element-row.merged-element {
-  -moz-box-shadow:inset 0 0 5px deeppink;
-  -webkit-box-shadow:inset 0 0 5px deeppink;
-  box-shadow:inset 0 0 5px deeppink;
+  background-color: rgba(221, 28, 119, 0.075);
+}
+
+tr.element-row.merged-element:not(.expanded-row):hover {
+  background: rgba(221, 28, 119, 0.15);
 }
 
 tr.element-row:not(.expanded-row):hover {

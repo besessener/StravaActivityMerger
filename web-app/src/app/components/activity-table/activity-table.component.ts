@@ -2,7 +2,7 @@ import {AfterViewInit, Component, Input} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {BackendService} from "../../services/backend/backend.service";
 import {SelectionModel} from "@angular/cdk/collections";
-import {Router} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, Params, Router} from "@angular/router";
 import {ActivitiesRetrieverService} from "../../services/activities-retriever/activities-retriever.service";
 import {FormBuilder} from "@angular/forms";
 
@@ -21,30 +21,79 @@ import {FormBuilder} from "@angular/forms";
     ]),
   ],
 })
-export class ActivityTableComponent implements AfterViewInit{
+export class ActivityTableComponent implements AfterViewInit {
   dataSource: any[] = [];
-  imageUrls: any = {};
   columnsToDisplay = ['select', 'id', 'type', 'name', 'date', 'elapsedTime'];
-  token: string | null = ''
+  expandedElement: Activity | null = null;
+  selection = new SelectionModel<Activity>(true, []);
+  numberOfRows = 30;
+
+  imageUrls: any = {};
+
+  key: string = ''; // google
+  token: string | null = '' // strava
+  loadedToken: string | null = '';
+
   checkoutForm = this.formBuilder.group({
     name: ''
   })
 
-  expandedElement: Activity | null = null;
-  key: string = '';
-
   loading: boolean = true;
   allElementsLoaded: boolean = false;
 
-  selection = new SelectionModel<Activity>(true, []);
+  constructor(private formBuilder: FormBuilder,
+              public backendService: BackendService,
+              public activitiesRetriever: ActivitiesRetrieverService,
+              private _router: Router,
+              public route: ActivatedRoute) {
+    this.init();
 
-  numberOfRows = 30;
-
-  @Input() set activities(value: any[]) {
-    this.setActivities(value);
+    let code = this.route.snapshot.queryParamMap.get('code');
+    if (!this.loadedToken) {
+      if (code) {
+        this.activitiesRetriever.setTokenFromCode(code);
+      } else {
+        _router.navigate(['/login', {}]);
+      }
+    }
   }
 
-  setActivities(value: any[]) {
+  init() {
+    this.loadedToken = localStorage.getItem('token');
+    this.backendService.getApiKey().subscribe((data: any) => {
+      this.key = data.key;
+    })
+  }
+
+  ngOnInit(): void {
+    this.activitiesRetriever.activities.subscribe(activities => {
+      if (activities.message) {
+        localStorage.clear();
+        this._router.navigate(['/login'], {queryParams: {error: encodeURIComponent(activities.message)}});
+        return;
+      }
+
+      this.setActivities(activities);
+    })
+
+    this.activitiesRetriever.token.subscribe(token => {
+      if (token) {
+        localStorage.setItem('token', token);
+        this.activitiesRetriever.setActivitiesWithToken(token);
+        this._router.navigate(['/activities'], {});
+      }
+    })
+
+    if (this.loadedToken) {
+      this.activitiesRetriever.token.next(this.loadedToken);
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (!this.isLandscapeMode()) this.columnsToDisplay.splice(1, 2);
+  }
+
+  setActivities(value: any) {
     this.token = localStorage.getItem('token');
     this.dataSource = value;
     this.dataSource.forEach(item => {
@@ -84,9 +133,9 @@ export class ActivityTableComponent implements AfterViewInit{
     let mDisplay = m > 0 ? m + (m == 1 ? " minute" : " minutes") : "";
     let sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
     let time = [];
-    if(hDisplay) time.push(hDisplay);
-    if(mDisplay) time.push(mDisplay);
-    if(sDisplay) time.push(sDisplay);
+    if (hDisplay) time.push(hDisplay);
+    if (mDisplay) time.push(mDisplay);
+    if (sDisplay) time.push(sDisplay);
     return time.join(', ');
   }
 
@@ -106,16 +155,6 @@ export class ActivityTableComponent implements AfterViewInit{
       });
   }
 
-  constructor(private formBuilder: FormBuilder, public backendService: BackendService, private activitiesRetriever: ActivitiesRetrieverService, private _router: Router) {
-    this.init();
-  }
-
-  init() {
-    this.backendService.getApiKey().subscribe((data: any) => {
-      this.key = data.key;
-    })
-  }
-
   mergeButtonClicked() {
     this.loading = true;
 
@@ -133,7 +172,9 @@ export class ActivityTableComponent implements AfterViewInit{
 
     this.backendService.mergeActivities(activityDataToPost).subscribe(() => {
       this.selection = new SelectionModel<Activity>(true, []);
-      this._router.navigate(['/'], { queryParams: {refresh: Math.random()} });
+      let token = localStorage.getItem('token')
+      if (token) this.activitiesRetriever.setActivitiesWithToken(token);
+      this._router.navigate(['/activities'], {queryParams: {refresh: Math.random()}});
       this.waitForDom();
     })
   }
@@ -173,10 +214,6 @@ export class ActivityTableComponent implements AfterViewInit{
 
   isLandscapeMode() {
     return window.innerHeight < window.innerWidth;
-  }
-
-  ngAfterViewInit(): void {
-    if (!this.isLandscapeMode()) this.columnsToDisplay.splice(1, 2);
   }
 }
 
